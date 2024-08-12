@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from rest_framework_simplejwt import tokens
 
 
 class CustomManager(BaseUserManager):
@@ -9,6 +8,7 @@ class CustomManager(BaseUserManager):
         Creates and saves a User with the given email, date of
         birth and password.
         """
+
         if not email:
             raise ValueError("Users must have an email address")
 
@@ -34,6 +34,8 @@ class CustomManager(BaseUserManager):
             **extra_fields,
         )
         user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
@@ -51,6 +53,11 @@ class CustomUser(AbstractBaseUser):
     confirm_password = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    last_logind = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = CustomManager()
@@ -58,7 +65,13 @@ class CustomUser(AbstractBaseUser):
     USERNAME_FIELD = "email"
 
     def __str__(self):
-        return self.email
+        return self.username
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -70,18 +83,35 @@ class CustomUser(AbstractBaseUser):
         # Simplest possible answer: Yes, always
         return True
 
-    def tokens(self):
-        return {
-            'refresh': str(tokens.RefreshToken.for_user(self)),
-            'access': str(tokens.RefreshToken.for_user(self).access_token)
-        }
 
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+class OneTimePassword(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
 
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        return self.is_admin
+    def __str__(self):
+        return f"{self.user.first_name} - otp code"
+
+class UserProfile(models.Model):
+
+    def get_user_pic_path(self):
+        return f'images/{self.username}/'
+
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    picture = models.ImageField(
+        default='images/user.jpg', upload_to='get_user_pic_path/')
+    status = models.CharField(max_length=100)
+    about_user = models.TextField(
+        verbose_name="About User", null=True, blank=True)
+    address = models.CharField(
+        verbose_name="Address", max_length=512, blank=True, null=True)
+    company = models.CharField(max_length=255, blank=True)
+    website = models.URLField(max_length=255, blank=True)
+    city = models.CharField(max_length=32, blank=True, null=True)
+    state = models.CharField(max_length=32, blank=True, null=True)
+    country = models.CharField(max_length=32, blank=True, null=True)
+    phone = models.CharField(max_length=32, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.email

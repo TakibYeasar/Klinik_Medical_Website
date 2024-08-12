@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_simplejwt',
+    "rest_framework",
+    "rest_framework_simplejwt",
+    'rest_framework_simplejwt.token_blacklist',
+    "corsheaders",
     "authapi",
     "core",
 ]
@@ -144,6 +146,9 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:5173',
+)
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",

@@ -13,12 +13,12 @@ class SliderSerializer(serializers.ModelSerializer):
         model = Slider
         fields = "__all__"
 
-    # def get_image_url(self, obj):
-    #     request = self.context.get('request')
-    #     if request:
-    #         return request.build_absolute_uri(obj.image.url)
-    #     else:
-    #         return obj.image.url
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+        else:
+            return obj.image.url
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -26,12 +26,6 @@ class BannerSerializer(serializers.ModelSerializer):
         model = Banner
         fields = "__all__"
         
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        request = self.context.get('request')
-        response['slider'] = SliderSerializer(
-            instance.slider, context={'request': request}).data
-        return response
 
 
 class KeypointsSerializer(serializers.ModelSerializer):
