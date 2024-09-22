@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Signin = () => {
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start">
+        <div className="bg-gray-100 flex flex-col items-center justify-start">
             {/* Header Image */}
             <div className="relative w-full h-80">
                 <Image
