@@ -3,7 +3,7 @@ import bg from "../../../../assets/header-page.jpg";
 import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 
 
-const Registration = () => {
+const SignUp = () => {
 
     return (
         <div className="">
@@ -56,4 +56,4 @@ const Registration = () => {
     )
 }
 
-export default Registration
+export default SignUp
