@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class CustomManager(BaseUserManager):
@@ -63,6 +64,13 @@ class CustomUser(AbstractBaseUser):
     objects = CustomManager()
 
     USERNAME_FIELD = "email"
+    
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        }
 
     def __str__(self):
         return self.username

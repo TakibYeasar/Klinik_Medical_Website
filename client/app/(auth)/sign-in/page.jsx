@@ -1,53 +1,89 @@
 import { FaFacebook, FaGoogle, FaTwitter } from "react-icons/fa";
 import Image from 'next/image';
-import bg from "../../../../assets/header-page.jpg";
 
 const Signin = () => {
     return (
-        <div className="">
-            <div className="relative">
-                <Image className='h-[20vw]' src={bg} alt='' />
-                <div className="container">
-                    <div className="grid absolute top-20">
-                        <h1 className="text-7xl text-font-light mt-4 mb-4">About Us</h1>
-                        <ul className="uppercase mb-0 flex items-center">
-                            <li className="list-none text-primary-color text-base font-medium"><a className="no-underline text-font-light text-base font-medium m-4" href="#">Home</a></li>
-                            <li className="list-none text-primary-color text-base font-medium"><a className="no-underline text-font-light text-base font-medium m-4" href="#">Pages</a></li>
-                            <li className="list-none text-primary-color text-base font-medium m-4">Authentication</li>
-                        </ul>
-                    </div>
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start">
+            {/* Header Image */}
+            <div className="relative w-full h-80">
+                <Image
+                    src="/assets/header-page.jpg"
+                    alt="Header Background"
+                    fill
+                    className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center">
+                    <h1 className="text-white text-6xl font-semibold">About Us</h1>
+                    <ul className="flex space-x-4 text-white mt-4">
+                        <li><a href="#" className="hover:underline">Home</a></li>
+                        <li><a href="#" className="hover:underline">Pages</a></li>
+                        <li>Authentication</li>
+                    </ul>
                 </div>
             </div>
 
-            <div className="container">
-                <div className="mt-4 mb-4 bg-card-bg p-8">
-                    <h4 className="border border-primary-color rounded-full px-4 py-2 w-36 text-center text-xl font-medium">Sign in</h4>
-                    <p className="text-xl font-normal">Hello, Welcome to your account.</p>
-                    <div className="flex">
-                        <a href="#" className="flex m-4 items-center text-xl font-normal p-4 rounded-md transition duration-300 ease-in no-underline bg-amber-400 text-font-light"><FaGoogle className='mr-2' /> Sign In with Google</a>
-                        <a href="#" className="flex m-4 items-center text-xl font-normal p-4 rounded-md transition duration-300 ease-in no-underline bg-blue-600 text-font-light"><FaFacebook className='mr-2' /> Sign In with Facebook</a>
-                        <a href="#" className="flex m-4 items-center text-xl font-normal p-4 rounded-md transition duration-300 ease-in no-underline bg-blue-400 text-font-light"><FaTwitter className='mr-2' /> Sign In with Twitter</a>
+            {/* Sign-in Form */}
+            <div className="w-full max-w-md bg-white shadow-lg rounded-lg mt-12 p-8">
+                <h4 className="text-center text-2xl font-semibold text-primary-color border-b pb-4 mb-6">Sign in</h4>
+                <p className="text-center text-gray-600 text-lg mb-8">Hello, Welcome to your account.</p>
+
+                <form className="space-y-6">
+                    {/* Email Field */}
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 text-lg mb-2">Email Address <span className="text-red-500">*</span></label>
+                        <input
+                            type="email"
+                            className="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-color"
+                            placeholder="Enter your email"
+                        />
                     </div>
-                    <div className="text-xl font-normal my-4">Or,</div>
-                    <form className="" role="form">
-                        <div className="grid mr-8">
-                            <label className="">Email Address <span>*</span></label>
-                            <input type="email" className="p-4 mt-4 mb-4" />
-                        </div>
-                        <div className="grid mr-8">
-                            <label className="">Password <span>*</span></label>
-                            <input type="password" className="p-4 mt-4 mb-4" />
-                        </div>
-                        <div className="grid">
-                            <label><input type="radio" className='text-xl font-normal m-2' />Remember me!</label>
-                            <a href="#" className="text-xl font-normal m-2">Forgot your Password?</a>
-                        </div>
-                        <button type="submit" className="text-xl font-normal p-4 rounded-md transition duration-300 ease-in no-underline bg-primary-color text-font-light">Login</button>
-                    </form>
+
+                    {/* Password Field */}
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 text-lg mb-2">Password <span className="text-red-500">*</span></label>
+                        <input
+                            type="password"
+                            className="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-color"
+                            placeholder="Enter your password"
+                        />
+                    </div>
+
+                    {/* Remember Me & Forgot Password */}
+                    <div className="flex items-center justify-between">
+                        <label className="flex items-center text-gray-700">
+                            <input type="checkbox" className="mr-2" />
+                            Remember me
+                        </label>
+                        <a href="#" className="text-primary-color hover:underline">Forgot your password?</a>
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full bg-primary-color text-white p-4 rounded-lg text-lg font-medium hover:bg-primary-dark transition duration-300"
+                    >
+                        Login
+                    </button>
+                </form>
+
+                {/* Social Sign-in */}
+                <div className="mt-8 text-center">
+                    <p className="text-gray-500 mb-4">Or sign in with</p>
+                    <div className="flex justify-center space-x-4">
+                        <a href="#" className="text-xl text-facebook hover:text-facebook-dark">
+                            <FaFacebook />
+                        </a>
+                        <a href="#" className="text-xl text-twitter hover:text-twitter-dark">
+                            <FaTwitter />
+                        </a>
+                        <a href="#" className="text-xl text-google hover:text-google-dark">
+                            <FaGoogle />
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Signin
+export default Signin;
