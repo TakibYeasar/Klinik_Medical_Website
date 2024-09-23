@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserFormValidation } from "../../../lib/validation";
+import { UserFormValidation } from "../../lib/validation";
 // Tailwind CSS classes are used directly instead of the UI library
 import "react-phone-number-input/style.css";
-import { CustomFormField, SubmitButton } from "../../../components"; 
+import { CustomFormField, SubmitButton } from ".."; 
 
 const PatientForm = () => {
   const router = useRouter();

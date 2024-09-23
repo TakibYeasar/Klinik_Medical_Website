@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
-import { Doctors } from "../../../constants";
-import { formatDateTime } from "../../../lib/utils";
-import { AppointmentModal, StatusBadge } from "../../../components";
+import { Doctors } from "../../constants";
+import { formatDateTime } from "../../lib/utils";
+import { AppointmentModal, StatusBadge } from "..";
 
 const Columns = () => {
   const columns = [

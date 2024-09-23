@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { RegisterForm } from "../../../../../components";
+import { RegisterForm } from "../../../../components";
 
 // // Function to fetch user data from Django backend
 // const fetchUser = async (userId) => {

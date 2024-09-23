@@ -13,20 +13,20 @@ export { default as Feature } from "./containers/Feature";
 export { default as Doctors } from "./containers/Doctors";
 export { default as Testimonial } from "./containers/Testimonial";
 
-export { default as AppointmentModal } from "./containers/AppointmentModal";
+export { default as AppointmentModal } from "./admin/AppointmentModal";
 export { default as CustomFormField } from "./containers/CustomFormField";
 export { default as FileUploader } from "./containers/FileUploader";
-export { default as PasskeyModal } from "./containers/PasskeyModal";
+export { default as PasskeyModal } from "./admin/PasskeyModal";
 export { default as StatCard } from "./containers/StatCard";
 export { default as StatusBadge } from "./containers/StatusBadge";
 export { default as SubmitButton } from "./containers/SubmitButton";
 
 // components - containers - forms
-export { default as AppointmentForm } from "./containers/forms/AppointmentForm";
-export { default as PatientForm } from "./containers/forms/PatientForm";
-export { default as RegisterForm } from "./containers/forms/RegisterForm";
+export { default as AppointmentForm } from "./patients/AppointmentForm";
+export { default as PatientForm } from "./patients/PatientForm";
+export { default as RegisterForm } from "./patients/RegisterForm";
 
 // components - containers - table
-export { default as Columns } from "./containers/table/Columns";
-export { default as DataTable } from "./containers/table/DataTable";
+export { default as Columns } from "./admin/Columns";
+export { default as DataTable } from "./admin/DataTable";
 

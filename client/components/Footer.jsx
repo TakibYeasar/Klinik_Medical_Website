@@ -63,14 +63,26 @@ const Footer = () => {
           <a className="block mb-1 p-0 float-left text-font-light text-base font-medium capitalize transition duration-300 ease-in-out before:relative before:font-black before:mr-2 hover:text-primary-color hover:tracking-widest hover:shadow-lg" href="">Support</a>
         </div>
 
-        <div className="">
-          <h5 className="main-title text-font-light no-underline my-6">Newsletter</h5>
-          <p className='text-font-light text-xl font-normal my-4'>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+          <h5 className="text-2xl font-semibold text-gray-800 mb-4">Newsletter</h5>
+          <p className="text-gray-600 text-lg mb-6">
+            Dolor amet sit justo amet elitr clita ipsum elitr est.
+          </p>
           <div className="relative flex items-center">
-            <input className="p-4 w-full rounded" type="text" placeholder="Your email" />
-            <button type="button" className="primary-btn rounded-md absolute left-[70%] py-2 items-center">SignUp</button>
+            <input
+              className="p-4 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="email"
+              placeholder="Your email"
+            />
+            <button
+              type="button"
+              className="bg-blue-600 text-white rounded-md py-2 px-4 absolute right-2 hover:bg-blue-700 transition"
+            >
+              Sign Up
+            </button>
           </div>
         </div>
+
 
       </div>
 

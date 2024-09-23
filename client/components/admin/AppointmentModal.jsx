@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { AppointmentForm } from "../../components";
+import { AppointmentForm } from "..";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AppointmentModal = ({
