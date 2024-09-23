@@ -1,28 +1,47 @@
 "use client";
 
-import axios from 'axios';
 import axiosInstance from '../../axios';
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSwipeable } from 'react-swipeable';
 
 const Testimonial = () => {
-
     const [IsLoading, setIsLoading] = useState(true);
     const [testdata, setTestdata] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-        axios.all([
-            axiosInstance.get('/api/core/testimonial/'),
-        ]).then(axios.spread((res) => {
-            setTestdata(res.data)
-            setIsLoading(false)
-            // console.log(res.data);
-        })).catch(err => {
-            console.log(err);
-        })
-    }, [])
+        axiosInstance.get('/api/core/testimonials/')
+            .then(res => {
+                setTestdata(res.data);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
+
+    const nextTestimonial = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === testdata.length - 1 ? 0 : prevIndex + 1
+        );
+    };
+
+    const prevTestimonial = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? testdata.length - 1 : prevIndex - 1
+        );
+    };
+
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: nextTestimonial,
+        onSwipedRight: prevTestimonial,
+        preventScrollOnSwipe: true,
+        trackMouse: true // Enable swipe with mouse as well
+    });
 
     if (IsLoading) {
-        return <h3>loading ...</h3>
+        return <h3>loading ...</h3>;
     }
 
     return (
@@ -31,20 +50,61 @@ const Testimonial = () => {
                 <p className="border border-primary-color rounded-full px-4 py-2 w-60 text-center text-xl font-medium">Testimonial</p>
                 <h1 className='main-title'>What Say Our Patients!</h1>
             </div>
-            {testdata?.map((item, i) => (
-                <div className="flex" key={i}>
-                    <div className="my-8 text-center items-center">
-                        <img className="h-8 w-8 rounded-full border border-primary-color m-4" src={item?.image} alt='' />
-                        <div className="bg-primary-color w-[40vw] p-6 rounded-md">
-                            <p className='text-xl font-normal text-font-light mb-4'>{item?.description}.</p>
-                            <h5 className="text-xl font-medium text-font-light">{item?.name}</h5>
-                            <span className="text-xl font-normal text-font-light">{item?.profession}</span>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
-    )
-}
 
-export default Testimonial
+            {/* Testimonial section with swipeable and hover effect */}
+            <div
+                className="relative group w-full"
+                {...swipeHandlers}
+            >
+                <AnimatePresence mode="wait">
+                    {testdata.length > 0 && (
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ opacity: 0, x: 100 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -100 }}
+                            transition={{ duration: 0.5 }}
+                            className="flex justify-center"
+                        >
+                            <div className="my-8 text-center items-center">
+                                <img className="h-16 w-16 rounded-full border border-primary-color m-4" src={testdata[currentIndex]?.image} alt='' />
+                                <div className="bg-primary-color w-[40vw] p-6 rounded-md">
+                                    <p className='text-xl font-normal text-font-light mb-4'>{testdata[currentIndex]?.description}</p>
+                                    <h5 className="text-xl font-medium text-font-light">{testdata[currentIndex]?.name}</h5>
+                                    <span className="text-xl font-normal text-font-light">{testdata[currentIndex]?.profession}</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Slider Controls - hidden by default, shown on hover */}
+                <button
+                    className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    onClick={prevTestimonial}
+                >
+                    {"<"}
+                </button>
+                <button
+                    className="absolute right-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    onClick={nextTestimonial}
+                >
+                    {">"}
+                </button>
+            </div>
+
+            {/* Dots for navigation */}
+            <div className="flex justify-center mt-4">
+                {testdata.map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setCurrentIndex(i)}
+                        className={`w-4 h-4 mx-2 rounded-full ${currentIndex === i ? 'bg-primary-color' : 'bg-gray-300'}`}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default Testimonial;

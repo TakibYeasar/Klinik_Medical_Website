@@ -7,22 +7,33 @@ import Signin from '../app/(auth)/sign-in/page';
 import SignUp from '../app/(auth)/sign-up/page';
 
 const SignInModal = ({ closeModal }) => (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
       <Signin />
-      <button onClick={closeModal} className="mt-4 text-gray-500 hover:text-black">Close</button>
+      <button
+        onClick={closeModal}
+        className="mt-4 text-gray-500 hover:text-black absolute top-2 right-2"
+      >
+        Close
+      </button>
     </div>
   </div>
 );
 
 const SignUpModal = ({ closeModal }) => (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
       <SignUp />
-      <button onClick={closeModal} className="mt-4 text-gray-500 hover:text-black">Close</button>
+      <button
+        onClick={closeModal}
+        className="mt-4 text-gray-500 hover:text-black absolute top-2 right-2"
+      >
+        Close
+      </button>
     </div>
   </div>
 );
+
 
 const Header = ({ user }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,7 +50,18 @@ const Header = ({ user }) => {
       .catch(err => {
         console.log(err);
       });
-  }, []);
+
+    // Disable body scroll when modals are open
+    if (showSignIn || showSignUp) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'; // Reset overflow on cleanup
+    };
+  }, [showSignIn, showSignUp]);
 
   if (isLoading) {
     return <h3>Loading ...</h3>;

@@ -34,14 +34,6 @@ class RegisterView(APIView):
         }, status=status.HTTP_201_CREATED)
 
 
-class LoginUserView(APIView):
-    serializer_class = LoginSerializer
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class VerifyUserEmail(APIView):
     def post(self, request):
@@ -63,6 +55,15 @@ class VerifyUserEmail(APIView):
         except OneTimePassword.DoesNotExist:
             return Response({'message': 'Invalid passcode'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class LoginUserView(APIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class PasswordResetRequestView(APIView):
     serializer_class = PasswordResetRequestSerializer
