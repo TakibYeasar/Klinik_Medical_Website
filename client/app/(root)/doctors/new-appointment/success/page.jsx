@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Doctors } from "../../../../.././../constants";
+import { Doctors } from "../../../../.././constants";
 
 // Function to fetch appointment from Django backend
 const fetchAppointment = async (appointmentId) => {

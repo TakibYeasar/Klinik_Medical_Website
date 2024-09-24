@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import DoctorDetails from './DoctorDetails';
-import MyBookings from '../../../../../components';
-import Sidebar from './Sidebar'; // Importing the Sidebar component
+// Mark the component as a Client Component
+"use client";
 
-const DoctorProfile = ({ initialDocInfo }) => {
-    const router = useRouter();
-    const { docId } = router.query;
-    const [docInfo, setDocInfo] = useState(initialDocInfo);
+import { useState, useEffect } from 'react';
+import { DocLeftSidebar, MyBookings } from '../../../../../components';
+import DoctorDetails from '../page';
+
+const DoctorProfile = ({ params }) => {
+    const { slug } = params; // Accessing slug from params
+    const [docInfo, setDocInfo] = useState(null);
     const [docSlot, setDocSlot] = useState([]);
     const [slotIndex, setSlotIndex] = useState(0);
     const [slotTime, setSlotTime] = useState('');
@@ -43,13 +43,42 @@ const DoctorProfile = ({ initialDocInfo }) => {
         }
     };
 
+    // Dummy doctor data
+    const dummyDocInfo = {
+        id: slug,
+        name: "Dr. John Doe",
+        specialty: "Cardiologist",
+        experience: 10,
+        biography: "Dr. John Doe is an experienced cardiologist with a passion for heart health and wellness.",
+        // Add more fields as needed
+    };
+
+    // Fetch doctor info (commenting out the API call)
     useEffect(() => {
-        getAvailableSlot();
+        const fetchDocInfo = async () => {
+            // Commented out the API call
+            // if (slug) {
+            //     const res = await fetch(`http://your-django-api-url.com/doctors/${slug}/`);
+            //     const initialDocInfo = await res.json();
+            //     setDocInfo(initialDocInfo);
+            // }
+
+            // Using dummy data instead
+            setDocInfo(dummyDocInfo);
+        };
+
+        fetchDocInfo();
+    }, [slug]);
+
+    useEffect(() => {
+        if (docInfo) {
+            getAvailableSlot();
+        }
     }, [docInfo]);
 
     return docInfo && (
         <div className="container mx-auto p-4 flex">
-            <Sidebar /> {/* Sidebar component */}
+            <DocLeftSidebar />
             <div className="flex-1 ml-4">
                 <DoctorDetails docInfo={docInfo} />
                 <MyBookings
@@ -64,12 +93,5 @@ const DoctorProfile = ({ initialDocInfo }) => {
     );
 };
 
-export async function getServerSideProps({ params }) {
-    const { docId } = params;
-    const res = await fetch(`http://your-django-api-url.com/doctors/${docId}/`);
-    const initialDocInfo = await res.json();
-
-    return { props: { initialDocInfo } };
-}
-
+// Export the default component
 export default DoctorProfile;

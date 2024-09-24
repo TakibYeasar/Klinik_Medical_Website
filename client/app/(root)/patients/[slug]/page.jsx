@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
-import Sidebar from "./Sidebar"; // Adjust the import path as necessary
+import { MyAppointments, PetLeftSidebar, RegisterForm } from "../../../../components";
 
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -36,21 +38,22 @@ const MyProfile = () => {
         return (
           <div className="w-3/4 p-6">
             <h2 className="text-2xl font-bold mb-4">Profile Information</h2>
-            <div className="flex flex-col gap-2 text-sm">
-              <div className="flex flex-col gap-2">
-                <label>First Name</label>
-                {isEdit ? (
-                  <input
-                    type="text"
-                    className="border p-2"
-                    value={userData.first_name}
-                    onChange={(e) => handleInputChange("first_name", e.target.value)}
-                  />
-                ) : (
-                  <p>{userData.first_name}</p>
-                )}
-              </div>
-              {/* Additional fields similar to the first name */}
+            <div className="flex flex-col gap-4 text-sm">
+              {Object.entries(userData).map(([key, value]) => (
+                <div key={key} className="flex flex-col gap-2">
+                  <label className="font-medium capitalize">{key.replace("_", " ")}</label>
+                  {isEdit ? (
+                    <input
+                      type="text"
+                      className="border p-2"
+                      value={value}
+                      onChange={(e) => handleInputChange(key, e.target.value)}
+                    />
+                  ) : (
+                    <p>{value}</p>
+                  )}
+                </div>
+              ))}
             </div>
             <div className="mt-4">
               {isEdit ? (
@@ -75,14 +78,14 @@ const MyProfile = () => {
         return (
           <div className="w-3/4 p-6">
             <h2 className="text-2xl font-bold mb-4">Appointments</h2>
-            <p>Here you can manage your appointments.</p>
+            <MyAppointments />
           </div>
         );
       case "register":
         return (
           <div className="w-3/4 p-6">
             <h2 className="text-2xl font-bold mb-4">Register</h2>
-            <p>Here you can register new information.</p>
+            <RegisterForm />
           </div>
         );
       default:
@@ -92,7 +95,7 @@ const MyProfile = () => {
 
   return (
     <div className="flex h-screen">
-      <Sidebar selectedItem={selectedItem} onSelect={setSelectedItem} />
+      <PetLeftSidebar selectedItem={selectedItem} onSelect={setSelectedItem} />
       {renderContent()}
     </div>
   );

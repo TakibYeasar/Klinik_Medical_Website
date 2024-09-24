@@ -268,7 +268,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomFormField, { FormFieldType } from "../containers/CustomFormField";
-import { FileUploader, SubmitButton } from "..";
+import { FileUploader, SubmitButton } from "../../components";
 import { GenderOptions, IdentificationTypes, PatientFormDefaultValues } from "../../constants";
 import { PatientFormValidation } from "../../lib/validation";
 

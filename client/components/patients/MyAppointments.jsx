@@ -1,42 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+"use client";
+
+import React from 'react';
 
 const MyAppointments = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axios.get('/api/appointments'); // Replace with your actual API endpoint
-        setDoctors(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDoctors();
-  }, []);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  const doctors = [
+    {
+      id: 1,
+      name: "Dr. John Doe",
+      speciality: "Cardiologist",
+      image: "/assets/images/doctor1.jpg",
+      address: {
+        line1: "123 Health St.",
+        line2: "Suite 100",
+      },
+    },
+    {
+      id: 2,
+      name: "Dr. Jane Smith",
+      speciality: "Dermatologist",
+      image: "/assets/images/doctor2.jpg",
+      address: {
+        line1: "456 Wellness Ave.",
+        line2: "Floor 2",
+      },
+    },
+    {
+      id: 3,
+      name: "Dr. Emily Johnson",
+      speciality: "Pediatrician",
+      image: "/assets/images/doctor3.jpg",
+      address: {
+        line1: "789 Care Rd.",
+        line2: "Building A",
+      },
+    },
+  ];
 
   return (
     <div>
       <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My appointments</p>
       <div>
-        {doctors.slice(0, 3).map((item, index) => (
-          <div key={index} className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b'>
+        {doctors.slice(0, 3).map((item) => (
+          <div key={item.id} className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b'>
             <div>
-              <img className='w-32 bg-indigo-50' src={item.image} alt="" />
+              <img className='w-32 bg-indigo-50' src={item.image} alt={item.name} />
             </div>
             <div className='flex-1 text-sm text-zinc-600'>
               <p className='text-neutral-800 font-medium mt-1'>{item.name}</p>
@@ -50,8 +57,12 @@ const MyAppointments = () => {
               </p>
             </div>
             <div className='flex flex-col gap-2 justify-end'>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-700 hover:text-white transition-all duration-500'>Cancel appointment</button>
+              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300'>
+                Pay Online
+              </button>
+              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-700 hover:text-white transition-all duration-500'>
+                Cancel appointment
+              </button>
             </div>
           </div>
         ))}

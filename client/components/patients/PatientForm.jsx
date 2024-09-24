@@ -3,20 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserFormValidation } from "../../lib/validation";
-// Tailwind CSS classes are used directly instead of the UI library
 import "react-phone-number-input/style.css";
-import { CustomFormField, SubmitButton } from ".."; 
+import { CustomFormField, SubmitButton } from "../../components";
 
 const PatientForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(UserFormValidation),
     defaultValues: {
       name: "",
       email: "",
@@ -27,11 +22,19 @@ const PatientForm = () => {
   const onSubmit = async (values) => {
     setIsLoading(true);
 
+    // Basic validation
+    const { name, email, phone } = values;
+    if (!name || !email || !phone) {
+      alert("Please fill in all fields.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const user = {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
+        name,
+        email,
+        phone,
       };
 
       // Replace with your Django backend API endpoint
@@ -42,6 +45,7 @@ const PatientForm = () => {
       }
     } catch (error) {
       console.error(error);
+      alert("An error occurred. Please try again.");
     }
 
     setIsLoading(false);

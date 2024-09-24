@@ -30,7 +30,12 @@ export { default as AppointmentModal } from "./admin/AppointmentModal";
 export { default as AppointmentForm } from "./patients/AppointmentForm";
 export { default as PatientForm } from "./patients/PatientForm";
 export { default as RegisterForm } from "./patients/RegisterForm";
+export { default as MyAppointments } from "./patients/MyAppointments";
+export { default as PetLeftSidebar } from "./patients/PetLeftSidebar";
 
 // components - containers - doctors
 export { default as SpecialityMenu } from "./doctors/SpecialityMenu";
 export { default as ReletedDoctors } from "./doctors/RelatedDoctors";
+export { default as DocLeftSidebar } from "./doctors/DocLeftSidebar";
+export { default as MyBookings } from "./doctors/MyBookings";
+
