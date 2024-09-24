@@ -7,8 +7,8 @@ export default function Home() {
       <Banner />
       <About />
       <Service />
-      <Feature />
       <Doctors />
+      <Feature />
       <Testimonial />
     </>
   )

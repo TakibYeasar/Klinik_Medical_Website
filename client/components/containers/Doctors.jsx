@@ -3,7 +3,7 @@
 import axios from 'axios';
 import axiosInstance from '../../axios';
 import { useEffect, useState } from 'react';
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 
 const Doctors = () => {
@@ -42,7 +42,7 @@ const Doctors = () => {
                                 <h5 className='text-xl font-medium'>{item?.name}</h5>
                                 <p className="text-xl font-normal text-primary-color">{item?.dept}</p>
                                 <div className="flex transition duration-500 text-center">
-                                    <a className="bg-bg-color p-2 rounded-full m-2" href={item?.facebook_link}><FaFacebook className='inline-flex text-primary-color text-3xl' /></a>
+                                    <a className="bg-bg-color p-2 rounded-full m-2" href={item?.linkedin_link}><FaLinkedin className='inline-flex text-primary-color text-3xl' /></a>
                                 <a className="bg-bg-color p-2 rounded-full m-2" href={item?.twitter_link}><FaTwitter className='inline-flex text-primary-color text-3xl' /></a>
                                 <a className="bg-bg-color p-2 rounded-full m-2" href={item?.instagram_link}><FaInstagram className='inline-flex text-primary-color text-3xl' /></a>
                                 </div>

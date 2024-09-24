@@ -12,21 +12,25 @@ export { default as Service } from "./containers/Service";
 export { default as Feature } from "./containers/Feature";
 export { default as Doctors } from "./containers/Doctors";
 export { default as Testimonial } from "./containers/Testimonial";
-
-export { default as AppointmentModal } from "./admin/AppointmentModal";
 export { default as CustomFormField } from "./containers/CustomFormField";
 export { default as FileUploader } from "./containers/FileUploader";
-export { default as PasskeyModal } from "./admin/PasskeyModal";
-export { default as StatCard } from "./containers/StatCard";
-export { default as StatusBadge } from "./containers/StatusBadge";
 export { default as SubmitButton } from "./containers/SubmitButton";
 
-// components - containers - forms
+
+// components - containers - admin
+export { default as Columns } from "./admin/Columns";
+export { default as DataTable } from "./admin/DataTable";
+export { default as PasskeyModal } from "./admin/PasskeyModal";
+export { default as StatCard } from "./admin/StatCard";
+export { default as StatusBadge } from "./admin/StatusBadge";
+export { default as AppointmentModal } from "./admin/AppointmentModal";
+
+
+// components - containers - patients
 export { default as AppointmentForm } from "./patients/AppointmentForm";
 export { default as PatientForm } from "./patients/PatientForm";
 export { default as RegisterForm } from "./patients/RegisterForm";
 
-// components - containers - table
-export { default as Columns } from "./admin/Columns";
-export { default as DataTable } from "./admin/DataTable";
-
+// components - containers - doctors
+export { default as SpecialityMenu } from "./doctors/SpecialityMenu";
+export { default as ReletedDoctors } from "./doctors/RelatedDoctors";
