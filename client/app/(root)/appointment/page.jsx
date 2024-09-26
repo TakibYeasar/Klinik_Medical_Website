@@ -70,47 +70,27 @@
 
 // export default Appointment;
 
+
 "use client";
 
-import Image from "next/image";
-import { AppointmentForm } from "../../../../components";
+import { AppointmentForm } from "../../../components";
 
 const Appointment = () => {
-  return (
-    <div className="flex h-screen">
-      <section className="flex flex-col justify-center items-center w-full max-w-lg mx-auto">
-        <div className="flex flex-col items-center justify-between w-full max-w-3xl">
-          {/* Logo */}
-          <Image
-            src="/assets/icons/logo-full.svg"
-            height={40}
-            width={160}
-            alt="logo"
-            className="mb-12 h-10 w-auto"
-          />
+    return (
+        <div className="flex h-screen">
+            <section className="flex flex-col justify-center items-center w-full max-w-lg mx-auto px-4">
+                <div className="flex flex-col items-center justify-between w-full max-w-3xl">
+                    {/* Appointment Form */}
+                    <div className="w-full bg-white shadow-md rounded-lg p-6">
+                        <AppointmentForm patientId={1} userId={1} type="create" />
+                    </div>
 
-          {/* Appointment Form */}
-          <div className="w-full">
-            <AppointmentForm patientId={1} userId={1} type="create" />
-          </div>
-
-          {/* Footer */}
-          <p className="text-gray-500 text-sm mt-10 py-12">© 2024 CarePluse</p>
+                    {/* Footer */}
+                    <p className="text-gray-500 text-sm mt-10 py-6">© 2024 CarePluse</p>
+                </div>
+            </section>
         </div>
-      </section>
-
-      {/* Side Image */}
-      <div className="hidden md:block">
-        <Image
-          src="/assets/images/appointment-img.png"
-          height={750}
-          width={750}
-          alt="appointment"
-          className="object-contain max-w-[390px]"
-        />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Appointment;

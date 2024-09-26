@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Doctors } from "../../../../.././constants";
+import { Doctors } from "../../../../constants";
 
 // Function to fetch appointment from Django backend
 const fetchAppointment = async (appointmentId) => {
@@ -40,59 +39,35 @@ const RequestSuccess = ({ searchParams, params: { userId } }) => {
   }, [appointmentId]);
 
   if (!appointment || !doctor) {
-    return <p>Loading...</p>;
+    return <p className="text-center">Loading...</p>;
   }
 
   return (
-    <div className="flex h-screen max-h-screen px-[5%] flex-col items-center justify-center space-y-8">
+    <div className="flex h-screen max-h-screen px-4 flex-col items-center justify-center space-y-8">
       {/* Logo */}
-      <Link href="/">
-        <Image
-          src="/assets/icons/logo-full.svg"
-          height={40}
-          width={160}
-          alt="logo"
-          className="h-10 w-auto"
-        />
+      <Link href="/" className="text-lg font-semibold text-blue-600 hover:text-blue-700">
+        CarePluse
       </Link>
 
       {/* Success Section */}
       <section className="flex flex-col items-center">
-        <Image
-          src="/assets/gifs/success.gif"
-          height={300}
-          width={280}
-          alt="success"
-          className="mb-6"
-        />
         <h2 className="text-2xl font-bold text-center mb-4 max-w-lg">
           Your <span className="text-green-500">appointment request</span> has
           been successfully submitted!
         </h2>
-        <p>We&apos;ll be in touch shortly to confirm.</p>
+        <p className="text-gray-700">We&apos;ll be in touch shortly to confirm.</p>
       </section>
 
       {/* Appointment Details Section */}
-      <section className="w-full max-w-lg space-y-4">
-        <p className="font-semibold">Requested appointment details:</p>
+      <section className="w-full max-w-lg space-y-4 bg-white shadow-md rounded-lg p-6">
+        <p className="font-semibold text-lg">Requested appointment details:</p>
         <div className="flex items-center gap-3">
-          <Image
-            src={doctor.image}
-            alt="doctor"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-          <p className="text-lg font-medium whitespace-nowrap">Dr. {doctor.name}</p>
+          <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+            <p className="text-xl font-medium">Dr. {doctor.name}</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
-          <Image
-            src="/assets/icons/calendar.svg"
-            height={24}
-            width={24}
-            alt="calendar"
-          />
-          <p>{formatDateTime(appointment.schedule).dateTime}</p>
+          <p className="font-medium">{formatDateTime(appointment.schedule).dateTime}</p>
         </div>
       </section>
 

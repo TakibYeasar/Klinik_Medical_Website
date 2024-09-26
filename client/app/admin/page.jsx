@@ -1,8 +1,6 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { ManageDoctors, ManagePatients, ManageAppointments, ManageMedicalRecords } from '../../components';
 
 // Fetch appointments from Django backend API
@@ -13,7 +11,7 @@ const fetchAppointments = async () => {
 };
 
 const AdminDashboard = () => {
-  const [activeSection, setActiveSection] = useState('appointments');
+  const [activeSection, setActiveSection] = useState('');
   const [appointments, setAppointments] = useState({
     scheduledCount: 0,
     pendingCount: 0,
@@ -78,15 +76,6 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="w-3/4 p-5 bg-gray-100 min-h-screen">
         <header className="flex justify-between items-center py-6">
-          <Link href="/" className="cursor-pointer">
-            <Image
-              src="/assets/icons/logo-full.svg"
-              height={32}
-              width={162}
-              alt="logo"
-              className="h-8 w-fit"
-            />
-          </Link>
           <p className="text-xl font-semibold">Admin Dashboard</p>
         </header>
 

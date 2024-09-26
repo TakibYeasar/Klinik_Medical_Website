@@ -18,11 +18,6 @@ export { default as SubmitButton } from "./containers/SubmitButton";
 
 
 // components - containers - admin
-export { default as Columns } from "./admin/Columns";
-export { default as DataTable } from "./admin/DataTable";
-export { default as PasskeyModal } from "./admin/PasskeyModal";
-export { default as StatCard } from "./admin/StatCard";
-export { default as StatusBadge } from "./admin/StatusBadge";
 export { default as AppointmentModal } from "./admin/AppointmentModal";
 export { default as ManageDoctors } from "./admin/ManageDoctors";
 export { default as ManagePatients } from "./admin/ManagePatients";

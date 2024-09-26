@@ -286,7 +286,7 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
     <div className="space-y-6">
       {type === "create" && (
         <section className="mb-12 space-y-4">
-          <h1 className="text-2xl font-semibold">New Appointment</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">New Appointment</h1>
           <p className="text-gray-700">Request a new appointment in 10 seconds.</p>
         </section>
       )}
@@ -301,7 +301,7 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
               <select
                 id="primaryPhysician"
                 {...form.register("primaryPhysician", { required: "Doctor selection is required" })}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
                 <option value="">Select a doctor</option>
                 {Doctors.map((doctor, i) => (
@@ -310,9 +310,6 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
                   </option>
                 ))}
               </select>
-              {/* {form.errors.primaryPhysician && (
-                <span className="text-red-500 text-sm">{form.errors.primaryPhysician.message}</span>
-              )} */}
             </div>
 
             <div className="space-y-4">
@@ -323,14 +320,11 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
                 type="datetime-local"
                 id="schedule"
                 {...form.register("schedule", { required: "Schedule date is required" })}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              {/* {form.errors.schedule && (
-                <span className="text-red-500 text-sm">{form.errors.schedule.message}</span>
-              )} */}
             </div>
 
-            <div className="flex flex-col xl:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-6">
               <div className="w-full">
                 <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
                   Appointment reason
@@ -338,12 +332,9 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
                 <textarea
                   id="reason"
                   {...form.register("reason", { required: "Reason is required" })}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Annual check-up"
                 />
-                {/* {form.errors.reason && (
-                  <span className="text-red-500 text-sm">{form.errors.reason.message}</span>
-                )} */}
               </div>
 
               <div className="w-full">
@@ -353,7 +344,7 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
                 <textarea
                   id="note"
                   {...form.register("note")}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Prefer afternoon appointments, if possible"
                 />
               </div>
@@ -369,16 +360,13 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
             <textarea
               id="cancellationReason"
               {...form.register("cancellationReason", { required: "Cancellation reason is required" })}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Urgent meeting came up"
             />
-            {/* {form.errors.cancellationReason && (
-              <span className="text-red-500 text-sm">{form.errors.cancellationReason.message}</span>
-            )} */}
           </div>
         )}
 
-        <SubmitButton isLoading={isLoading} className="w-full">
+        <SubmitButton isLoading={isLoading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-md py-2">
           {buttonLabel}
         </SubmitButton>
       </form>
@@ -387,4 +375,3 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
 };
 
 export default AppointmentForm;
-
