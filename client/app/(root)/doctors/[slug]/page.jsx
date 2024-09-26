@@ -1,44 +1,81 @@
-// import { RelatedDoctors } from '../../../../components';
+"use client";
 
-const DoctorDetails = () => {
-    const docInfo = {
+import { useEffect, useState } from 'react';
+import { DocLeftSidebar, PatientList, AppointmentCalendar, FeedbackSection, DoctorProfile } from '../../../../components';
+
+const DoctorDashboard = () => {
+    const [activeSection, setActiveSection] = useState('profile');
+    const [patients, setPatients] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const [feedbacks, setFeedbacks] = useState([]);
+    const [docInfo, setDocInfo] = useState(null);
+
+    // Dummy data
+    const dummyPatients = [
+        { id: 1, name: "Alice Smith", age: 30, lastVisit: "2024-09-20", history: "Heart check-up" },
+        { id: 2, name: "Bob Johnson", age: 45, lastVisit: "2024-09-18", history: "Routine check-up" },
+    ];
+
+    const dummyAppointments = [
+        { id: 1, date: "2024-09-30", time: "10:00 AM", patient: "Alice Smith" },
+        { id: 2, date: "2024-10-01", time: "2:00 PM", patient: "Bob Johnson" },
+    ];
+
+    const dummyFeedbacks = [
+        { patient: "Alice Smith", feedback: "Great doctor!" },
+        { patient: "Bob Johnson", feedback: "Very professional." },
+    ];
+
+    const dummyDocInfo = {
         id: 1,
         name: "Dr. John Doe",
-        image: "/assets/images/doctor.jpg", // Placeholder image path
-        degree: "MBBS",
-        speciality: "Cardiologist",
-        experience: 10, // in years
-        about: "Dr. John Doe is an experienced cardiologist with a passion for heart health. He has been practicing medicine for over a decade and is committed to providing the best care to his patients.",
-        fees: 150 // Appointment fee
+        specialty: "Cardiologist",
+        biography: "Experienced in treating heart conditions with compassion and care.",
+    };
+
+    useEffect(() => {
+        // Simulate fetching data
+        setPatients(dummyPatients);
+        setAppointments(dummyAppointments);
+        setFeedbacks(dummyFeedbacks);
+        setDocInfo(dummyDocInfo);
+    }, []);
+
+    const renderActiveSection = () => {
+        switch (activeSection) {
+            case 'profile':
+                return <DoctorProfile docInfo={docInfo} />;
+            case 'patients':
+                return <PatientList patients={patients} />;
+            case 'appointments':
+                return <AppointmentCalendar appointments={appointments} />;
+            case 'feedback':
+                return <FeedbackSection feedbacks={feedbacks} />;
+            default:
+                return null;
+        }
     };
 
     return (
-        <div id="details" className='flex flex-col sm:flex-row gap-6 mb-8'>
-            <div className='flex-shrink-0'>
-                <img className='bg-primary w-full sm:w-72 rounded-lg shadow-md' src={docInfo.image} alt={docInfo.name} />
+        <div className="flex">
+            {/* Sidebar */}
+            <div className="w-1/4 bg-gray-800 text-white min-h-screen p-5">
+                <h2 className="text-2xl font-bold mb-5">Doctor Dashboard</h2>
+                <DocLeftSidebar setActiveSection={setActiveSection} />
             </div>
-            <div className='flex-1 border border-gray-300 rounded-lg p-6 bg-white shadow-md'>
-                <p className='flex items-center gap-2 text-2xl font-semibold text-gray-900'>
-                    {docInfo.name}
-                    <img className='w-5' src='/assets/icons/verified-icon.png' alt="verified" />
-                </p>
-                <div className='flex items-center gap-2 text-sm mt-1 text-gray-600'>
-                    <p>{docInfo.degree} - {docInfo.speciality}</p>
-                    <span className='py-0.5 px-2 border border-gray-400 text-sm rounded-full'>{docInfo.experience} years</span>
-                </div>
-                <div className='mt-4'>
-                    <p className='flex items-center gap-1 text-sm text-gray-900 font-medium'>
-                        About <img src='/assets/icons/info-icon.png' alt="info" />
-                    </p>
-                    <p className='text-sm text-gray-500 mt-1'>{docInfo.about}</p>
-                </div>
-                <p className='text-gray-500 font-medium mt-4'>
-                    Appointment Fee: <span className='font-extrabold text-lg'>${docInfo.fees}</span>
-                </p>
-                {/* <RelatedDoctors docId={docInfo.id} speciality={docInfo.speciality} /> */}
+
+            {/* Main Content */}
+            <div className="w-3/4 p-5 bg-gray-100 min-h-screen">
+                <header className="flex justify-between items-center py-6">
+                    <h1 className="text-xl font-semibold">Welcome, {docInfo?.name}</h1>
+                </header>
+
+                <main className="flex flex-col space-y-14">
+                    {renderActiveSection()}
+                </main>
             </div>
         </div>
     );
 };
 
-export default DoctorDetails;
+export default DoctorDashboard;

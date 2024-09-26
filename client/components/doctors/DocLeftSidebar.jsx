@@ -1,15 +1,28 @@
-const DocLeftSidebar = () => (
-    <div className="w-64 bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-4">Doctor's Dashboard</h2>
-        <ul>
-            <li className="mb-2">
-                <a href="#details" className="text-gray-700 hover:text-primary">Profile Details</a>
+const DocLeftSidebar = ({ setActiveSection }) => {
+    return (
+        <ul className="space-y-4">
+            <li>
+                <button onClick={() => setActiveSection('profile')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Doctor Profile
+                </button>
             </li>
-            <li className="mb-2">
-                <a href="#booking" className="text-gray-700 hover:text-primary">Booking</a>
+            <li>
+                <button onClick={() => setActiveSection('patients')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Patient List
+                </button>
+            </li>
+            <li>
+                <button onClick={() => setActiveSection('appointments')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Appointment Calendar
+                </button>
+            </li>
+            <li>
+                <button onClick={() => setActiveSection('feedback')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Patient Feedback
+                </button>
             </li>
         </ul>
-    </div>
-);
+    );
+};
 
 export default DocLeftSidebar;

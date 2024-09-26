@@ -2,38 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import axiosInstance from '../axios';
-import { FaArrowRight, FaClock, FaFacebook, FaHospital, FaInstagram, FaLinkedin, FaMapMarker, FaPhone, FaTwitter } from "react-icons/fa";
-import Signin from '../app/(auth)/sign-in/page';
-import SignUp from '../app/(auth)/sign-up/page';
-
-const SignInModal = ({ closeModal }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
-      <Signin />
-      <button
-        onClick={closeModal}
-        className="mt-4 text-gray-500 hover:text-black absolute top-2 right-2"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);
-
-const SignUpModal = ({ closeModal }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
-      <SignUp />
-      <button
-        onClick={closeModal}
-        className="mt-4 text-gray-500 hover:text-black absolute top-2 right-2"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);
-
+import {
+  FaArrowRight,
+  FaClock,
+  FaFacebook,
+  FaHospital,
+  FaInstagram,
+  FaLinkedin,
+  FaMapMarker,
+  FaPhone,
+  FaTimes,
+  FaTwitter
+} from "react-icons/fa";
+import Signin from './auth/SignIn';
+import SignUp from './auth/SignUp';
 
 const Header = ({ user }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -47,25 +29,32 @@ const Header = ({ user }) => {
         setInfo(res.data);
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
 
-    // Disable body scroll when modals are open
-    if (showSignIn || showSignUp) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    const handleBodyScroll = () => {
+      if (showSignIn || showSignUp) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    handleBodyScroll();
 
     return () => {
-      document.body.style.overflow = 'auto'; // Reset overflow on cleanup
+      document.body.style.overflow = 'auto';
     };
   }, [showSignIn, showSignUp]);
 
   if (isLoading) {
     return <h3>Loading ...</h3>;
   }
+
+  const handleLogout = () => {
+    // Implement logout logic
+  };
 
   return (
     <div>
@@ -87,10 +76,26 @@ const Header = ({ user }) => {
               <FaPhone className="text-primary-color text-lg ml-2 mr-2" />
               <small className="text-font-color text-base">{item?.phone}</small>
             </div>
-            <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.facebook_link}><FaFacebook className="text-xl text-primary-color" /></a>
-            <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.twitter_link}><FaTwitter className="text-xl text-primary-color" /></a>
-            <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.linkedin_link}><FaLinkedin className="text-xl text-primary-color" /></a>
-            <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.instagram_link}><FaInstagram className="text-xl text-primary-color" /></a>
+            {item?.facebook_link && (
+              <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.facebook_link}>
+                <FaFacebook className="text-xl text-primary-color" />
+              </a>
+            )}
+            {item?.twitter_link && (
+              <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.twitter_link}>
+                <FaTwitter className="text-xl text-primary-color" />
+              </a>
+            )}
+            {item?.linkedin_link && (
+              <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.linkedin_link}>
+                <FaLinkedin className="text-xl text-primary-color" />
+              </a>
+            )}
+            {item?.instagram_link && (
+              <a className="h-8 w-8 items-center justify-center mx-2 p-2 bg-font-light rounded-full" href={item?.instagram_link}>
+                <FaInstagram className="text-xl text-primary-color" />
+              </a>
+            )}
           </div>
         </div>
       ))}
@@ -98,7 +103,10 @@ const Header = ({ user }) => {
       {/* Navigation */}
       <nav className="bg-bg-color flex justify-between items-center">
         <a href="/" className="items-center pl-8">
-          <h1 className="flex text-4xl font-bold"><FaHospital className="mr-2" />Klinik</h1>
+          <h1 className="flex text-4xl font-bold">
+            <FaHospital className="mr-2" />
+            Klinik
+          </h1>
         </a>
         <div className="flex items-center">
           <a href="/" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Home</a>
@@ -110,13 +118,15 @@ const Header = ({ user }) => {
               {user.role === 'admin' ? (
                 <>
                   <a href="/dashboard" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Dashboard</a>
-                  <button className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase" onClick={() => {/* Handle logout logic */ }}>Logout</button>
+                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Logout</button>
                 </>
               ) : (
                 <>
-                  <a href="/appointment" className="flex bg-primary-color text-font-light text-lg font-medium outline-none no-underline p-6 items-center">Appointment <FaArrowRight className="pl-2 text-2xl font-bold" /></a>
+                  <a href="/appointment" className="flex bg-primary-color text-font-light text-lg font-medium outline-none no-underline p-6 items-center">
+                    Appointment <FaArrowRight className="pl-2 text-2xl font-bold" />
+                  </a>
                   <a href="/profile" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Profile</a>
-                  <button className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase" onClick={() => {/* Handle logout logic */ }}>Logout</button>
+                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Logout</button>
                 </>
               )}
             </>
@@ -130,8 +140,32 @@ const Header = ({ user }) => {
       </nav>
 
       {/* Modal Components */}
-      {showSignIn && <SignInModal closeModal={() => setShowSignIn(false)} />}
-      {showSignUp && <SignUpModal closeModal={() => setShowSignUp(false)} />}
+      {showSignIn && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+            <Signin />
+            <button
+              onClick={() => setShowSignIn(false)}
+              className="absolute top-4 right-4 text-gray-700 hover:text-gray-900"
+            >
+              <FaTimes />
+            </button>
+          </div>
+        </div>
+      )}
+      {showSignUp && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+            <SignUp />
+            <button
+              onClick={() => setShowSignUp(false)}
+              className="absolute top-4 right-4 text-gray-700 hover:text-gray-900"
+            >
+              <FaTimes />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -24,6 +24,10 @@ export { default as PasskeyModal } from "./admin/PasskeyModal";
 export { default as StatCard } from "./admin/StatCard";
 export { default as StatusBadge } from "./admin/StatusBadge";
 export { default as AppointmentModal } from "./admin/AppointmentModal";
+export { default as ManageDoctors } from "./admin/ManageDoctors";
+export { default as ManagePatients } from "./admin/ManagePatients";
+export { default as ManageAppointments } from "./admin/ManageAppointments";
+export { default as ManageMedicalRecords } from "./admin/ManageMedicalRecords";
 
 
 // components - containers - patients
@@ -38,4 +42,9 @@ export { default as SpecialityMenu } from "./doctors/SpecialityMenu";
 export { default as ReletedDoctors } from "./doctors/RelatedDoctors";
 export { default as DocLeftSidebar } from "./doctors/DocLeftSidebar";
 export { default as MyBookings } from "./doctors/MyBookings";
+export { default as DoctorDetails } from "./doctors/DoctorDetails";
+export { default as DoctorProfile } from "./doctors/DoctorProfile";
+export { default as PatientList } from "./doctors/PatientList";
+export { default as AppointmentCalendar } from "./doctors/AppointmentCalendar";
+export { default as FeedbackSection } from "./doctors/FeedbackSection";
 

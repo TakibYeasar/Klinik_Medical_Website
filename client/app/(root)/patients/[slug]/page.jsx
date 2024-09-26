@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { MyAppointments, PetLeftSidebar, RegisterForm } from "../../../../components";
+import { MyAppointments, PetLeftSidebar, RegisterForm, UserProfile } from "../../../../components";
 
 const MyProfile = () => {
-  const [isEdit, setIsEdit] = useState(false);
   const [selectedItem, setSelectedItem] = useState("profile");
   const [userData, setUserData] = useState({
     first_name: "Edward",
@@ -28,75 +27,68 @@ const MyProfile = () => {
     current_medication: "None",
   });
 
-  const handleInputChange = (field, value) => {
-    setUserData((prev) => ({ ...prev, [field]: value }));
-  };
+  const renderProfileInfo = () => (
+    <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Profile Information</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+        {Object.entries(userData).map(([key, value]) => (
+          <div key={key} className="flex flex-col gap-1">
+            <label className="font-medium capitalize text-gray-600">
+              {key.replace(/_/g, " ")}
+            </label>
+            <p className="text-gray-800">{value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderAppointments = () => (
+    <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Appointments</h2>
+      <MyAppointments />
+    </div>
+  );
+
+  const renderRegisterForm = () => (
+    <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Register</h2>
+      <RegisterForm />
+    </div>
+  );
 
   const renderContent = () => {
     switch (selectedItem) {
       case "profile":
-        return (
-          <div className="w-3/4 p-6">
-            <h2 className="text-2xl font-bold mb-4">Profile Information</h2>
-            <div className="flex flex-col gap-4 text-sm">
-              {Object.entries(userData).map(([key, value]) => (
-                <div key={key} className="flex flex-col gap-2">
-                  <label className="font-medium capitalize">{key.replace("_", " ")}</label>
-                  {isEdit ? (
-                    <input
-                      type="text"
-                      className="border p-2"
-                      value={value}
-                      onChange={(e) => handleInputChange(key, e.target.value)}
-                    />
-                  ) : (
-                    <p>{value}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="mt-4">
-              {isEdit ? (
-                <button
-                  className="border border-primary px-4 py-2 rounded-lg"
-                  onClick={() => setIsEdit(false)}
-                >
-                  Save Information
-                </button>
-              ) : (
-                <button
-                  className="border border-primary px-4 py-2 rounded-lg"
-                  onClick={() => setIsEdit(true)}
-                >
-                  Edit
-                </button>
-              )}
-            </div>
-          </div>
-        );
+        return renderProfileInfo();
       case "appointments":
-        return (
-          <div className="w-3/4 p-6">
-            <h2 className="text-2xl font-bold mb-4">Appointments</h2>
-            <MyAppointments />
-          </div>
-        );
+        return renderAppointments();
       case "register":
-        return (
-          <div className="w-3/4 p-6">
-            <h2 className="text-2xl font-bold mb-4">Register</h2>
-            <RegisterForm />
-          </div>
-        );
+        return renderRegisterForm();
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex h-screen">
-      <PetLeftSidebar selectedItem={selectedItem} onSelect={setSelectedItem} />
-      {renderContent()}
+    <div className="flex">
+      {/* Left Sidebar */}
+      <PetLeftSidebar
+        selectedItem={selectedItem}
+        onSelect={setSelectedItem}
+        className="w-1/4 bg-gray-800 text-white min-h-screen p-5"
+      />
+
+      {/* Main Content */}
+      <div className="w-3/4 p-5 bg-gray-100 min-h-screen">
+        <header className="flex justify-between items-center py-6">
+          <h1 className="text-xl font-semibold">My Profile</h1>
+        </header>
+
+        <main className="flex flex-col space-y-14">
+          {renderContent()}
+        </main>
+      </div>
     </div>
   );
 };
