@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { ManageDoctors, ManagePatients, ManageAppointments, ManageMedicalRecords } from '../../components';
+import { ManageDoctors, ManageAppointments, ManageMedicalRecords, ManageUsers } from '../../components';
 
 // Fetch appointments from Django backend API
 const fetchAppointments = async () => {
@@ -40,6 +40,14 @@ const AdminDashboard = () => {
         <ul className="space-y-4">
           <li>
             <button
+              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'users' ? 'bg-gray-600' : ''}`}
+              onClick={() => handleSectionChange('users')}
+            >
+              Manage Users
+            </button>
+          </li>
+          <li>
+            <button
               className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'doctors' ? 'bg-gray-600' : ''}`}
               onClick={() => handleSectionChange('doctors')}
             >
@@ -48,18 +56,10 @@ const AdminDashboard = () => {
           </li>
           <li>
             <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'patients' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('patients')}
-            >
-              Manage Patients
-            </button>
-          </li>
-          <li>
-            <button
               className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'appointments' ? 'bg-gray-600' : ''}`}
               onClick={() => handleSectionChange('appointments')}
             >
-              Appointments
+              Manage Appointments
             </button>
           </li>
           <li>
@@ -81,6 +81,14 @@ const AdminDashboard = () => {
 
         <main className="flex flex-col space-y-14">
           {/* Dashboard Content */}
+
+          {activeSection === 'users' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-3">Manage Users</h2>
+              <ManageUsers />
+            </div>
+          )}
+
           {activeSection === 'doctors' && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Doctors</h2>
@@ -88,16 +96,9 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {activeSection === 'patients' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Manage Patients</h2>
-              <ManagePatients />
-            </div>
-          )}
-
           {activeSection === 'appointments' && (
             <div>
-              <h2 className="text-2xl font-bold mb-3">Appointments</h2>
+              <h2 className="text-2xl font-bold mb-3">Manage Appointments</h2>
               <ManageAppointments appointments={appointments} />
             </div>
           )}

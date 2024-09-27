@@ -7,6 +7,7 @@ const Signin = dynamic(() => import('./SignIn'), { ssr: false });
 
 const SignUp = () => {
     const [showSignIn, setShowSignIn] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('patient'); // Default to patient
 
     const handleSignInClick = () => {
         setShowSignIn(true);
@@ -20,6 +21,29 @@ const SignUp = () => {
         <div className="container flex justify-center items-center min-h-screen">
             <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-8 bg-gradient-to-br from-white via-gray-50 to-gray-100">
                 <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Account</h2>
+
+                {/* Role Selection Section */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Select Your Role <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex space-x-4">
+                        <button
+                            type="button"
+                            onClick={() => setSelectedRole('patient')}
+                            className={`flex-1 p-4 border rounded-md text-center ${selectedRole === 'patient' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300'}`}
+                        >
+                            Patient
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setSelectedRole('doctor')}
+                            className={`flex-1 p-4 border rounded-md text-center ${selectedRole === 'doctor' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300'}`}
+                        >
+                            Doctor
+                        </button>
+                    </div>
+                </div>
 
                 {/* Form Section */}
                 <form className="space-y-6" role="form">

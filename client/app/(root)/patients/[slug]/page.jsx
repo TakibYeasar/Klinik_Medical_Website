@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MyAppointments, PetLeftSidebar, RegisterForm, UserProfile } from "../../../../components";
+import { MyAppointments, PetLeftSidebar, RegisterForm } from "../../../../components";
 
 const MyProfile = () => {
   const [selectedItem, setSelectedItem] = useState("profile");
@@ -27,6 +27,10 @@ const MyProfile = () => {
     current_medication: "None",
   });
 
+  const handleEditProfile = () => {
+    setSelectedItem("register");
+  };
+
   const renderProfileInfo = () => (
     <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-6 text-gray-700">Profile Information</h2>
@@ -40,20 +44,28 @@ const MyProfile = () => {
           </div>
         ))}
       </div>
+      <div className="mt-4">
+        <button
+          onClick={handleEditProfile}
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+        >
+          Edit Profile
+        </button>
+      </div>
     </div>
   );
 
   const renderAppointments = () => (
     <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Appointments</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Medical History</h2>
       <MyAppointments />
     </div>
   );
 
   const renderRegisterForm = () => (
     <div className="w-full lg:w-3/4 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Register</h2>
-      <RegisterForm />
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Edit Profile</h2>
+      <RegisterForm userData={userData} setUserData={setUserData} />
     </div>
   );
 

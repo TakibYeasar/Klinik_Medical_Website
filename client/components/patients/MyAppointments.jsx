@@ -1,74 +1,141 @@
-"use client";
+"use client"
 
-import React from 'react';
+import React, { useState } from 'react';
+import { FaCalendarAlt, FaRegEdit, FaTrash } from 'react-icons/fa';
 
-const MyAppointments = () => {
-  const doctors = [
+const AppointmentManagement = () => {
+  // Sample appointment data
+  const [appointments, setAppointments] = useState([
     {
       id: 1,
-      name: "Dr. John Doe",
-      speciality: "Cardiologist",
-      image: "/assets/images/doctor1.jpg",
-      address: {
-        line1: "123 Health St.",
-        line2: "Suite 100",
-      },
+      date: '2024-09-30',
+      time: '10:00 AM',
+      doctor: 'Dr. John Doe',
+      status: 'Upcoming',
     },
     {
       id: 2,
-      name: "Dr. Jane Smith",
-      speciality: "Dermatologist",
-      image: "/assets/images/doctor2.jpg",
-      address: {
-        line1: "456 Wellness Ave.",
-        line2: "Floor 2",
-      },
+      date: '2024-10-05',
+      time: '2:00 PM',
+      doctor: 'Dr. Jane Smith',
+      status: 'Upcoming',
     },
     {
       id: 3,
-      name: "Dr. Emily Johnson",
-      speciality: "Pediatrician",
-      image: "/assets/images/doctor3.jpg",
-      address: {
-        line1: "789 Care Rd.",
-        line2: "Building A",
-      },
+      date: '2024-08-20',
+      time: '1:00 PM',
+      doctor: 'Dr. John Doe',
+      status: 'Completed',
     },
-  ];
+  ]);
+
+  // Handler functions for booking, rescheduling, and canceling appointments
+  const handleBookAppointment = () => {
+    // Logic for booking an appointment
+    alert('Book Appointment functionality not implemented.');
+  };
+
+  const handleRescheduleAppointment = (id) => {
+    // Logic for rescheduling an appointment
+    alert(`Reschedule Appointment ID: ${id} functionality not implemented.`);
+  };
+
+  const handleCancelAppointment = (id) => {
+    setAppointments(appointments.filter((appt) => appt.id !== id));
+    alert(`Appointment ID: ${id} has been canceled.`);
+  };
 
   return (
-    <div>
-      <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My appointments</p>
-      <div>
-        {doctors.slice(0, 3).map((item) => (
-          <div key={item.id} className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b'>
-            <div>
-              <img className='w-32 bg-indigo-50' src={item.image} alt={item.name} />
-            </div>
-            <div className='flex-1 text-sm text-zinc-600'>
-              <p className='text-neutral-800 font-medium mt-1'>{item.name}</p>
-              <p>{item.speciality}</p>
-              <p>Address:</p>
-              <p className='text-xs'>{item.address.line1}</p>
-              <p className='text-xs'>{item.address.line2}</p>
-              <p className='text-xs mt-1'>
-                <span className='text-sm text-neutral-700 font-medium'>Date & Time:</span>
-                25, July, 2024 | 9:30 PM
-              </p>
-            </div>
-            <div className='flex flex-col gap-2 justify-end'>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300'>
-                Pay Online
-              </button>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-700 hover:text-white transition-all duration-500'>
-                Cancel appointment
-              </button>
-            </div>
+    <div className="container mx-auto p-8">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Appointment Management</h2>
+
+      {/* Appointment Booking Section */}
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Book a New Appointment</h3>
+        <button
+          onClick={handleBookAppointment}
+          className="bg-primary text-white py-3 px-6 rounded-md shadow-lg hover:bg-secondary transition duration-300"
+        >
+          Book Appointment
+        </button>
+      </div>
+
+      {/* Upcoming Appointments Section */}
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Upcoming Appointments</h3>
+        <ul className="space-y-4">
+          {appointments
+            .filter((appt) => appt.status === 'Upcoming')
+            .map((appt) => (
+              <li key={appt.id} className="flex justify-between items-center p-4 border-b">
+                <div>
+                  <p className="font-medium text-gray-800">{`${appt.date} at ${appt.time}`}</p>
+                  <p className="text-gray-600">With: {appt.doctor}</p>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleRescheduleAppointment(appt.id)}
+                    className="text-blue-500 hover:text-blue-700 transition duration-300"
+                  >
+                    <FaRegEdit />
+                  </button>
+                  <button
+                    onClick={() => handleCancelAppointment(appt.id)}
+                    className="text-red-500 hover:text-red-700 transition duration-300"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </div>
+
+      {/* Appointment History Section */}
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Appointment History</h3>
+        <ul className="space-y-4">
+          {appointments
+            .filter((appt) => appt.status === 'Completed')
+            .map((appt) => (
+              <li key={appt.id} className="p-4 border-b">
+                <p className="font-medium text-gray-800">{`${appt.date} at ${appt.time}`}</p>
+                <p className="text-gray-600">With: {appt.doctor}</p>
+              </li>
+            ))}
+        </ul>
+      </div>
+
+      {/* Reminders Section */}
+      <div className="mt-8 bg-white shadow-lg rounded-lg p-6">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Reminder Preferences</h3>
+        <form>
+          <div className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              id="email-reminder"
+              className="mr-2"
+            />
+            <label htmlFor="email-reminder" className="text-gray-700">Receive reminders via Email</label>
           </div>
-        ))}
+          <div className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              id="sms-reminder"
+              className="mr-2"
+            />
+            <label htmlFor="sms-reminder" className="text-gray-700">Receive reminders via SMS</label>
+          </div>
+          <button
+            type="submit"
+            className="bg-primary text-white py-2 px-4 rounded-md shadow-lg hover:bg-secondary transition duration-300"
+          >
+            Save Preferences
+          </button>
+        </form>
       </div>
     </div>
   );
 };
 
-export default MyAppointments;
+export default AppointmentManagement;

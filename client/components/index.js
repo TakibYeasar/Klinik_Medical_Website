@@ -8,6 +8,7 @@ export { default as Footer } from "./Footer";
 // components - containers
 export { default as Banner } from "./containers/Banner";
 export { default as About } from "./containers/About";
+export { default as HealthcareProviderSearch } from "./containers/HealthcareProviderSearch";
 export { default as Service } from "./containers/Service";
 export { default as Feature } from "./containers/Feature";
 export { default as Doctors } from "./containers/Doctors";
@@ -18,9 +19,8 @@ export { default as SubmitButton } from "./containers/SubmitButton";
 
 
 // components - containers - admin
-export { default as AppointmentModal } from "./admin/AppointmentModal";
 export { default as ManageDoctors } from "./admin/ManageDoctors";
-export { default as ManagePatients } from "./admin/ManagePatients";
+export { default as ManageUsers } from "./admin/ManageUsers";
 export { default as ManageAppointments } from "./admin/ManageAppointments";
 export { default as ManageMedicalRecords } from "./admin/ManageMedicalRecords";
 

@@ -18,7 +18,7 @@ const PetLeftSidebar = ({ selectedItem, onSelect }) => {
                         className={`${selectedItem === "appointments" ? "font-bold" : ""} text-lg`}
                         onClick={() => onSelect("appointments")}
                     >
-                        Appointments
+                        Medical History
                     </button>
                 </li>
                 <li>
