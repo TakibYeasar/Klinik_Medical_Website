@@ -7,16 +7,16 @@ const PetLeftSidebar = ({ selectedItem, onSelect }) => {
             <ul className="space-y-4">
                 <li>
                     <button
-                        className={`${selectedItem === "profile" ? "font-bold" : ""} text-lg`}
-                        onClick={() => onSelect("profile")}
+                        className={`${selectedItem === "myProfile" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("myProfile")}
                     >
                         My Profile
                     </button>
                 </li>
                 <li>
                     <button
-                        className={`${selectedItem === "appointments" ? "font-bold" : ""} text-lg`}
-                        onClick={() => onSelect("appointments")}
+                        className={`${selectedItem === "medicalHistory" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("medicalHistory")}
                     >
                         Medical History
                     </button>
@@ -27,6 +27,30 @@ const PetLeftSidebar = ({ selectedItem, onSelect }) => {
                         onClick={() => onSelect("register")}
                     >
                         Register
+                    </button>
+                </li>
+                <li>
+                    <button
+                        className={`${selectedItem === "medicalRecordsAccess" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("medicalRecordsAccess")}
+                    >
+                        Medical Records Access
+                    </button>
+                </li>
+                <li>
+                    <button
+                        className={`${selectedItem === "healthTracking" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("healthTracking")}
+                    >
+                        Health Tracking
+                    </button>
+                </li>
+                <li>
+                    <button
+                        className={`${selectedItem === "paymentHistory" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("paymentHistory")}
+                    >
+                        Payment History
                     </button>
                 </li>
             </ul>

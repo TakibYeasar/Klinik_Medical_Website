@@ -3,7 +3,7 @@
 import { Footer, Header } from '../components'
 import './globals.css'
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from 'next-themes';
+// import { ThemeProvider } from 'next-themes';
 import { cn } from "../lib/utils";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -34,15 +34,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={cn(
-          'min-h-screen bg-dark-300 font-sans antialiased',
+          'min-h-screen font-sans antialiased',
           inter.className
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark">
+        {/* <ThemeProvider attribute="class" defaultTheme="dark"> */}
           <Header user={user} />
           {children}
           <Footer />
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   )

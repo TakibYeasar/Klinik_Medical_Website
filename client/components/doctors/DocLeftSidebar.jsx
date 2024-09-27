@@ -8,17 +8,17 @@ const DocLeftSidebar = ({ setActiveSection }) => {
             </li>
             <li>
                 <button onClick={() => setActiveSection('patients')} className="w-full text-left p-2 rounded hover:bg-gray-700">
-                    Patient List
+                    Patient Management
                 </button>
             </li>
             <li>
                 <button onClick={() => setActiveSection('appointments')} className="w-full text-left p-2 rounded hover:bg-gray-700">
-                    Appointment Calendar
+                    Appointment Scheduling
                 </button>
             </li>
             <li>
-                <button onClick={() => setActiveSection('feedback')} className="w-full text-left p-2 rounded hover:bg-gray-700">
-                    Patient Feedback
+                <button onClick={() => setActiveSection('prescriptions')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Prescription Management
                 </button>
             </li>
         </ul>

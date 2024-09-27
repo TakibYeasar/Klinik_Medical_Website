@@ -2,7 +2,7 @@
 
 import { FaCheckCircle } from "react-icons/fa";
 
-const About = () => {
+const Aboutus = () => {
 
     return (
         <div className="container my-20">
@@ -26,4 +26,4 @@ const About = () => {
     )
 }
 
-export default About
+export default Aboutus

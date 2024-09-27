@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
-import { FaCalendarAlt, FaRegEdit, FaTrash } from 'react-icons/fa';
+import { FaCalendarAlt, FaRegEdit, FaTrash, FaStar } from 'react-icons/fa';
 
 const AppointmentManagement = () => {
   // Sample appointment data
@@ -12,6 +12,9 @@ const AppointmentManagement = () => {
       time: '10:00 AM',
       doctor: 'Dr. John Doe',
       status: 'Upcoming',
+      feedbackGiven: false,
+      rating: 0,
+      review: '',
     },
     {
       id: 2,
@@ -19,6 +22,9 @@ const AppointmentManagement = () => {
       time: '2:00 PM',
       doctor: 'Dr. Jane Smith',
       status: 'Upcoming',
+      feedbackGiven: false,
+      rating: 0,
+      review: '',
     },
     {
       id: 3,
@@ -26,8 +32,13 @@ const AppointmentManagement = () => {
       time: '1:00 PM',
       doctor: 'Dr. John Doe',
       status: 'Completed',
+      feedbackGiven: false,
+      rating: 0,
+      review: '',
     },
   ]);
+
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   // Handler functions for booking, rescheduling, and canceling appointments
   const handleBookAppointment = () => {
@@ -43,6 +54,20 @@ const AppointmentManagement = () => {
   const handleCancelAppointment = (id) => {
     setAppointments(appointments.filter((appt) => appt.id !== id));
     alert(`Appointment ID: ${id} has been canceled.`);
+  };
+
+  const handleOpenFeedback = (appointment) => {
+    setSelectedAppointment(appointment);
+  };
+
+  const handleFeedbackSubmit = (id, rating, review) => {
+    setAppointments(appointments.map(appt => {
+      if (appt.id === id) {
+        return { ...appt, feedbackGiven: true, rating, review };
+      }
+      return appt;
+    }));
+    setSelectedAppointment(null);
   };
 
   return (
@@ -101,39 +126,70 @@ const AppointmentManagement = () => {
               <li key={appt.id} className="p-4 border-b">
                 <p className="font-medium text-gray-800">{`${appt.date} at ${appt.time}`}</p>
                 <p className="text-gray-600">With: {appt.doctor}</p>
+                {!appt.feedbackGiven ? (
+                  <button
+                    onClick={() => handleOpenFeedback(appt)}
+                    className="text-sm text-blue-500 hover:underline"
+                  >
+                    Provide Feedback
+                  </button>
+                ) : (
+                  <div>
+                    <p className="text-yellow-500">Rating: {appt.rating}/5</p>
+                    <p className="text-gray-600">Review: {appt.review}</p>
+                  </div>
+                )}
               </li>
             ))}
         </ul>
       </div>
 
-      {/* Reminders Section */}
-      <div className="mt-8 bg-white shadow-lg rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Reminder Preferences</h3>
-        <form>
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              id="email-reminder"
-              className="mr-2"
-            />
-            <label htmlFor="email-reminder" className="text-gray-700">Receive reminders via Email</label>
+      {/* Feedback Modal */}
+      {selectedAppointment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Provide Feedback for {selectedAppointment.doctor}
+            </h3>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Rating:</label>
+              <select
+                className="border p-2 w-full"
+                onChange={(e) => setSelectedAppointment({ ...selectedAppointment, rating: e.target.value })}
+                value={selectedAppointment.rating}
+              >
+                <option value={0}>Select Rating</option>
+                {[1, 2, 3, 4, 5].map((rate) => (
+                  <option key={rate} value={rate}>{rate} Stars</option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Review:</label>
+              <textarea
+                className="border p-2 w-full"
+                rows="3"
+                onChange={(e) => setSelectedAppointment({ ...selectedAppointment, review: e.target.value })}
+                value={selectedAppointment.review}
+              ></textarea>
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setSelectedAppointment(null)}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleFeedbackSubmit(selectedAppointment.id, selectedAppointment.rating, selectedAppointment.review)}
+                className="bg-primary text-white py-2 px-4 rounded-md shadow-lg hover:bg-secondary transition duration-300"
+              >
+                Submit
+              </button>
+            </div>
           </div>
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              id="sms-reminder"
-              className="mr-2"
-            />
-            <label htmlFor="sms-reminder" className="text-gray-700">Receive reminders via SMS</label>
-          </div>
-          <button
-            type="submit"
-            className="bg-primary text-white py-2 px-4 rounded-md shadow-lg hover:bg-secondary transition duration-300"
-          >
-            Save Preferences
-          </button>
-        </form>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

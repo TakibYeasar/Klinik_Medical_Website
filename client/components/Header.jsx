@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';  // Import Link for client-side navigation
 import axiosInstance from '../axios';
 import {
   FaArrowRight,
@@ -14,8 +15,11 @@ import {
   FaTimes,
   FaTwitter
 } from "react-icons/fa";
-import Signin from './auth/SignIn';
-import SignUp from './auth/SignUp';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Signin and SignUp to prevent SSR issues
+const Signin = dynamic(() => import('./auth/SignIn'));
+const SignUp = dynamic(() => import('./auth/SignUp'));
 
 const Header = ({ user }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -102,40 +106,62 @@ const Header = ({ user }) => {
 
       {/* Navigation */}
       <nav className="bg-bg-color flex justify-between items-center">
-        <a href="/" className="items-center pl-8">
+        <Link href="/" className="items-center pl-8">
           <h1 className="flex text-4xl font-bold">
             <FaHospital className="mr-2" />
             Klinik
           </h1>
-        </a>
+        </Link>
         <div className="flex items-center">
-          <a href="/" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Home</a>
-          <a href="/aboutus" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">About</a>
-          <a href="/contact" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Contact</a>
+          <Link href="/" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Home</Link>
+          <Link href="/about" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">About</Link>
+          <Link href="/doctors" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Doctors</Link>
 
           {user ? (
             <>
               {user.role === 'admin' ? (
                 <>
-                  <a href="/dashboard" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Dashboard</a>
-                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Logout</button>
+                  <Link href="/dashboard" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Dashboard
+                  </Link>
+                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Logout
+                  </button>
+                </>
+              ) : user.role === 'doctor' ? (
+                <>
+                  <Link href="/doctor-portal" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Doctor Portal
+                  </Link>
+                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Logout
+                  </button>
                 </>
               ) : (
                 <>
-                  <a href="/appointment" className="flex bg-primary-color text-font-light text-lg font-medium outline-none no-underline p-6 items-center">
+                  <Link href="/appointment" className="flex bg-primary-color text-font-light text-lg font-medium outline-none no-underline p-6 items-center">
                     Appointment <FaArrowRight className="pl-2 text-2xl font-bold" />
-                  </a>
-                  <a href="/profile" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Profile</a>
-                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Logout</button>
+                  </Link>
+                  <Link href="/profile" className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Profile
+                  </Link>
+                  <button onClick={handleLogout} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                    Logout
+                  </button>
                 </>
               )}
             </>
           ) : (
             <>
-              <button onClick={() => setShowSignIn(true)} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Sign In</button>
-              <button onClick={() => setShowSignUp(true)} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">Sign Up</button>
+              <button onClick={() => setShowSignIn(true)} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                Sign In
+              </button>
+              <button onClick={() => setShowSignUp(true)} className="mt-2 mb-2 ml-4 mr-4 text-font-color text-base font-medium uppercase">
+                Sign Up
+              </button>
             </>
           )}
+
         </div>
       </nav>
 

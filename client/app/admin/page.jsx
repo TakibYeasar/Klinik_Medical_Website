@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import { ManageDoctors, ManageAppointments, ManageMedicalRecords, ManageUsers } from '../../components';
+import { ManageUsers, ManageDoctors, ManagePatients, ManageAppointments, ManageMedicalRecords, FinanceManagement, ReportingAnalytics, SystemSettings } from '../../components';
 
 // Fetch appointments from Django backend API
 const fetchAppointments = async () => {
@@ -70,6 +70,30 @@ const AdminDashboard = () => {
               Medical Records
             </button>
           </li>
+          <li>
+            <button
+              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'finance' ? 'bg-gray-600' : ''}`}
+              onClick={() => handleSectionChange('finance')}
+            >
+              Finance Management
+            </button>
+          </li>
+          <li>
+            <button
+              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'reporting' ? 'bg-gray-600' : ''}`}
+              onClick={() => handleSectionChange('reporting')}
+            >
+              Reporting & Analytics
+            </button>
+          </li>
+          <li>
+            <button
+              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'settings' ? 'bg-gray-600' : ''}`}
+              onClick={() => handleSectionChange('settings')}
+            >
+              System Settings
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -107,6 +131,27 @@ const AdminDashboard = () => {
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Medical Records</h2>
               <ManageMedicalRecords />
+            </div>
+          )}
+
+          {activeSection === 'finance' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-3">Finance Management</h2>
+              <FinanceManagement />
+            </div>
+          )}
+
+          {activeSection === 'reporting' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-3">Reporting & Analytics</h2>
+              <ReportingAnalytics />
+            </div>
+          )}
+
+          {activeSection === 'settings' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-3">System Settings</h2>
+              <SystemSettings />
             </div>
           )}
         </main>

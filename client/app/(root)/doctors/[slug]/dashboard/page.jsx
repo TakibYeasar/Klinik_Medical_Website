@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { DocLeftSidebar, PatientList, AppointmentCalendar, FeedbackSection, DoctorProfile } from '../../../../../components';
+import {
+    DocLeftSidebar,
+    DoctorDetails,
+    PatientManagement,
+    AppointmentScheduling,
+    PrescriptionManagement,
+} from '../../../../../components';
 
 const DoctorDashboard = () => {
     const [activeSection, setActiveSection] = useState('profile');
     const [patients, setPatients] = useState([]);
     const [appointments, setAppointments] = useState([]);
-    const [feedbacks, setFeedbacks] = useState([]);
     const [docInfo, setDocInfo] = useState(null);
 
     // Dummy data
@@ -21,54 +26,58 @@ const DoctorDashboard = () => {
         { id: 2, date: "2024-10-01", time: "2:00 PM", patient: "Bob Johnson" },
     ];
 
-    const dummyFeedbacks = [
-        { patient: "Alice Smith", feedback: "Great doctor!" },
-        { patient: "Bob Johnson", feedback: "Very professional." },
-    ];
-
     const dummyDocInfo = {
         id: 1,
         name: "Dr. John Doe",
-        specialty: "Cardiologist",
-        biography: "Experienced in treating heart conditions with compassion and care.",
-        qualifications: "MD, PhD",
-        achievements: "Board certified in cardiology.",
-        languages_spoken: "English, Spanish",
-        consultation_fees: 150,
-        contact_number: "123-456-7890",
-        email: "john.doe@example.com",
+        profilePhoto: "/path/to/profile-photo.jpg",
+        bio: "Experienced cardiologist with over 10 years of practice. Passionate about providing the best care to patients and dedicated to continuous education.",
+        specialties: ["Cardiology", "Hypertension", "Heart Failure"],
+        education: [
+            { degree: "MD", institution: "Harvard Medical School", year: 2012 },
+            { degree: "BS in Biology", institution: "Stanford University", year: 2008 },
+        ],
+        ratings: 4.8,
+        schedule: [
+            { day: "Monday", time: "9:00 AM - 5:00 PM" },
+            { day: "Tuesday", time: "10:00 AM - 4:00 PM" },
+            { day: "Wednesday", time: "9:00 AM - 5:00 PM" },
+            { day: "Thursday", time: "10:00 AM - 4:00 PM" },
+            { day: "Friday", time: "9:00 AM - 5:00 PM" },
+        ],
+        contact: {
+            phone: "+1 (555) 123-4567",
+            email: "johndoe@healthcare.com",
+        },
+        reviews: [
+            { patient: "Jane Smith", review: "Dr. Doe is amazing! He took the time to explain everything and really listened.", rating: 5 },
+            { patient: "John Appleseed", review: "Great doctor, very knowledgeable and friendly.", rating: 4 },
+        ],
+        socialLinks: {
+            facebook: "https://facebook.com/doctorjohndoe",
+            twitter: "https://twitter.com/doctorjohndoe",
+            linkedin: "https://linkedin.com/in/doctorjohndoe",
+        },
     };
 
     useEffect(() => {
         // Simulate fetching data
         setPatients(dummyPatients);
         setAppointments(dummyAppointments);
-        setFeedbacks(dummyFeedbacks);
         setDocInfo(dummyDocInfo);
     }, []);
 
     const renderActiveSection = () => {
         switch (activeSection) {
             case 'profile':
-                return (
-                    <>
-                        <DoctorProfile docInfo={docInfo} />
-                        <button
-                            className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
-                            onClick={() => setActiveSection('editProfile')}
-                        >
-                            Edit Profile
-                        </button>
-                    </>
-                );
+                return <DoctorDetails doctor={dummyDocInfo} />;
             case 'editProfile':
                 return <EditProfile docInfo={docInfo} setDocInfo={setDocInfo} />;
             case 'patients':
-                return <PatientList patients={patients} />;
+                return <PatientManagement patients={patients} />;
             case 'appointments':
-                return <AppointmentCalendar appointments={appointments} />;
-            case 'feedback':
-                return <FeedbackSection feedbacks={feedbacks} />;
+                return <AppointmentScheduling appointments={appointments} availableSlots={[]} selectedDate={""} setSelectedDate={() => { }} selectedTime={""} setSelectedTime={() => { }} />;
+            case 'prescriptions':
+                return <PrescriptionManagement />;
             default:
                 return null;
         }
@@ -84,7 +93,6 @@ const DoctorDashboard = () => {
 
         const handleSubmit = (e) => {
             e.preventDefault();
-            // Here, you would typically send the updated data to your backend.
             setDocInfo(formData); // Update docInfo with the edited data
             alert("Profile updated successfully!");
         };
