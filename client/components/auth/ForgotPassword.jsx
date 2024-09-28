@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Signin from './SignIn';
+import Signin from './SignIn'; // Adjust the import if your file structure is different
 import Link from 'next/link';
 
 const ForgotPassword = () => {
@@ -21,13 +21,14 @@ const ForgotPassword = () => {
                     Enter your email address below, and we’ll send you a link to reset your password.
                 </p>
 
-                <form className="space-y-6">
+                <form className="space-y-6" role="form">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                         <input
                             type="email"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter your email"
+                            required
                         />
                     </div>
 

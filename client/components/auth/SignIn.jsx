@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { SignUp } from './SignUp';
-import { ForgotPassword } from './ForgotPassword';
+import SignUp from './SignUp'; // Adjust the import if your file structure is different
+import ForgotPassword from './ForgotPassword'; // Adjust the import if your file structure is different
 
 const Signin = () => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -27,19 +27,25 @@ const Signin = () => {
 
                 <form className="" role="form">
                     <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Address <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address <span className="text-red-500">*</span>
+                        </label>
                         <input
                             type="email"
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter your email"
+                            required
                         />
                     </div>
                     <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Password <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Password <span className="text-red-500">*</span>
+                        </label>
                         <input
                             type="password"
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter your password"
+                            required
                         />
                     </div>
 

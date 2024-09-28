@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Signin from './SignIn';
-import Link from 'next/link';
+import Signin from './SignIn'; // Adjust the import path if necessary
 
 const ResetPassword = () => {
     const [showSignIn, setShowSignIn] = useState(false);
@@ -21,13 +20,14 @@ const ResetPassword = () => {
                     Please enter your new password below.
                 </p>
 
-                <form className="space-y-6">
+                <form className="space-y-6" role="form">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                         <input
                             type="password"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter new password"
+                            required
                         />
                     </div>
 
@@ -37,6 +37,7 @@ const ResetPassword = () => {
                             type="password"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Confirm new password"
+                            required
                         />
                     </div>
 
