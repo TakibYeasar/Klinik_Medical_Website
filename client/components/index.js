@@ -13,6 +13,7 @@ export { default as Feature } from "./containers/Feature";
 export { default as Doctors } from "./containers/Doctors";
 export { default as Contact } from "./containers/Contact";
 export { default as Testimonial } from "./containers/Testimonial";
+export { default as Pagination } from "./containers/Pagination";
 
 
 // components - containers - admin
@@ -28,7 +29,6 @@ export { default as SystemSettings } from "./admin/SystemSettings";
 
 // components - containers - patients
 export { default as AppointmentForm } from "./patients/AppointmentForm";
-export { default as RegisterForm } from "./patients/RegisterForm";
 export { default as PetLeftSidebar } from "./patients/PetLeftSidebar";
 export { default as MyProfile } from "./patients/MyProfile";
 export { default as MyAppointments } from "./patients/MyAppointments";

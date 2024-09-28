@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion'; // Importing framer-motion for animations
+import { motion } from 'framer-motion'; // Animations
+import { FaSearch, FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa'; // Icons for search/sorting
+import {Pagination} from '../../components'; // Pagination Component (custom or a library)
 
 const ManageMedicalRecords = () => {
     // Dummy medical records data
@@ -30,9 +32,16 @@ const ManageMedicalRecords = () => {
             medications: 'Salbutamol inhaler as needed',
             doctor: 'Dr. Brown',
         },
+        // Additional records...
     ];
 
-    // Dummy data for analytics
+    const [medicalRecords, setMedicalRecords] = useState(dummyMedicalRecords);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc' for sorting
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 5; // Number of records per page
+
+    // Dummy analytics data for chart or statistics
     const dummyAnalytics = {
         totalAppointments: 150,
         totalPatients: 80,
@@ -44,7 +53,31 @@ const ManageMedicalRecords = () => {
         ],
     };
 
-    const [medicalRecords] = useState(dummyMedicalRecords);
+    // Filtered records based on search term
+    const filteredRecords = medicalRecords.filter(record =>
+        record.patientName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Sorting records by patient name or date
+    const sortedRecords = [...filteredRecords].sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return a.patientName.localeCompare(b.patientName);
+        } else {
+            return b.patientName.localeCompare(a.patientName);
+        }
+    });
+
+    // Pagination logic
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = sortedRecords.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    // Toggle sort order between 'asc' and 'desc'
+    const toggleSortOrder = () => {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
 
     return (
         <div className="container mx-auto px-4 py-6">
@@ -74,6 +107,27 @@ const ManageMedicalRecords = () => {
                 </div>
             </motion.div>
 
+            {/* Search and Sort */}
+            <div className="flex justify-between items-center mb-4">
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Search by patient name..."
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <FaSearch className="absolute left-3 top-3 text-gray-500" />
+                </div>
+                <button
+                    onClick={toggleSortOrder}
+                    className="flex items-center bg-gray-200 px-4 py-2 rounded-lg"
+                >
+                    {sortOrder === 'asc' ? <FaSortAlphaDown /> : <FaSortAlphaUp />}
+                    <span className="ml-2">Sort by Name</span>
+                </button>
+            </div>
+
             {/* Medical Records Table */}
             <motion.div
                 className="bg-white shadow-md rounded-lg p-6"
@@ -93,7 +147,7 @@ const ManageMedicalRecords = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {medicalRecords.map((record) => (
+                        {currentRecords.map((record) => (
                             <motion.tr
                                 key={record.id}
                                 className="border-b"
@@ -111,6 +165,14 @@ const ManageMedicalRecords = () => {
                     </tbody>
                 </table>
             </motion.div>
+
+            {/* Pagination */}
+            <Pagination
+                recordsPerPage={recordsPerPage}
+                totalRecords={sortedRecords.length}
+                paginate={paginate}
+                currentPage={currentPage}
+            />
         </div>
     );
 };

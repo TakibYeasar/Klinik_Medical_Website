@@ -23,7 +23,7 @@ const Doctors = () => {
             id: 1,
             name: "Dr. Jane Smith",
             image: "/path/to/image1.jpg",
-            dept: "Cardiologist",
+            dept: "Cardiology",
             experience: 10,
             available: true,
             ratings: 4.5,
@@ -33,7 +33,7 @@ const Doctors = () => {
             id: 2,
             name: "Dr. John Doe",
             image: "/path/to/image2.jpg",
-            dept: "Neurologist",
+            dept: "Neurology",
             experience: 8,
             available: false,
             ratings: 4.2,
@@ -43,7 +43,7 @@ const Doctors = () => {
             id: 3,
             name: "Dr. Emily Davis",
             image: "/path/to/image3.jpg",
-            dept: "Dermatologist",
+            dept: "Dermatology",
             experience: 7,
             available: true,
             ratings: 4.8,
@@ -93,7 +93,7 @@ const Doctors = () => {
         <div className="container mx-auto py-10 px-6">
             <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Find the Best Specialists for You</h1>
             <p className="text-gray-600 text-center mb-8 max-w-xl mx-auto">
-                Use the filters below to search for doctors by name, speciality, rating, availability, and experience.
+                Use the filters below to search for doctors by name, specialty, rating, availability, and experience.
             </p>
 
             {/* Search Filters */}
@@ -107,17 +107,17 @@ const Doctors = () => {
                     className="w-full py-3 px-4 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-500"
                 />
 
-                {/* Speciality Dropdown */}
+                {/* Specialty Dropdown */}
                 <select
                     value={speciality}
                     onChange={(e) => setSpeciality(e.target.value)}
                     className="w-full py-3 px-4 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-500"
                 >
-                    <option value="">All Specialities</option>
-                    <option value="Cardiologist">Cardiologist</option>
-                    <option value="Neurologist">Neurologist</option>
-                    <option value="Dermatologist">Dermatologist</option>
-                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="">All Specialties</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Pediatrics">Pediatrics</option>
                     <option value="General Physician">General Physician</option>
                 </select>
 
@@ -172,61 +172,64 @@ const Doctors = () => {
 
             {/* Doctors List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredDoctors.map((doctor) => (
-                    <div
-                        className="relative bg-white border border-gray-200 rounded-lg overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-1"
-                        key={doctor.id}
-                    >
-                        <img
-                            className="w-full h-48 object-cover object-center"
-                            src={doctor.image}
-                            alt={doctor.name}
-                        />
-                        <div className="p-6">
-                            <div className="flex justify-between items-center mb-2">
-                                <h3 className="text-xl font-semibold text-gray-900">{doctor.name}</h3>
-                                <div className="flex items-center text-yellow-500">
-                                    <FaStar />
-                                    <span className="ml-1 text-sm text-gray-800">{doctor.ratings}</span>
+                {filteredDoctors.length > 0 ? (
+                    filteredDoctors.map((doctor) => (
+                        <div
+                            className="relative bg-white border border-gray-200 rounded-lg overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-1"
+                            key={doctor.id}
+                        >
+                            <img
+                                className="w-full h-48 object-cover object-center"
+                                src={doctor.image}
+                                alt={doctor.name}
+                            />
+                            <div className="p-6">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-xl font-semibold text-gray-900">{doctor.name}</h3>
+                                    <div className="flex items-center text-yellow-500">
+                                        <FaStar />
+                                        <span className="ml-1 text-sm text-gray-800">{doctor.ratings}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <p className="text-gray-600 text-sm mb-4">{doctor.dept}</p>
-                            <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
-                            <div className="flex items-center gap-2 mt-4">
-                                {doctor.available ? (
-                                    <div className="flex items-center text-green-600">
-                                        <FaCheckCircle className="mr-1" />
-                                        <span>Available</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center text-red-500">
-                                        <FaTimesCircle className="mr-1" />
-                                        <span>Not Available</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex items-center gap-2 mt-4">
-                                <FaEnvelope className="text-blue-500" />
-                                <a
-                                    href={`mailto:${doctor.contact}`}
-                                    className="text-sm text-blue-500 underline hover:text-blue-700"
+                                <p className="text-gray-600 text-sm mb-4">{doctor.dept}</p>
+                                <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
+                                <div className="flex items-center gap-2 mt-4">
+                                    {doctor.available ? (
+                                        <div className="flex items-center text-green-600">
+                                            <FaCheckCircle className="mr-1" />
+                                            <span>Available</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center text-red-500">
+                                            <FaTimesCircle className="mr-1" />
+                                            <span>Not Available</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-4">
+                                    <FaEnvelope className="text-blue-500" />
+                                    <a
+                                        href={`mailto:${doctor.contact}`}
+                                        className="text-sm text-blue-500 underline hover:text-blue-700"
+                                    >
+                                        Contact: {doctor.contact}
+                                    </a>
+                                </div>
+                                {/* View Profile Button */}
+                                <button
+                                    onClick={() => router.push(`/doctors/${doctor.name}/profile`)}
+                                    className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
                                 >
-                                    Contact: {doctor.contact}
-                                </a>
+                                    View Profile
+                                </button>
                             </div>
-                            {/* View Profile Button */}
-                            <button
-                                onClick={() => router.push(`/doctors/${doctor.name}/profile`)}
-                                className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
-                            >
-                                View Profile
-                            </button>
                         </div>
-                        <div className="absolute top-2 right-2">
-                            {/* Additional labels like "Featured" */}
-                        </div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center text-gray-500">
+                        No doctors found matching your criteria.
                     </div>
-                ))}
+                )}
             </div>
         </div>
     );

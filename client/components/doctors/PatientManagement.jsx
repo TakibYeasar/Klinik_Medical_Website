@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 
 const PatientManagement = () => {
@@ -28,6 +30,7 @@ const PatientManagement = () => {
     const [notes, setNotes] = useState('');
     const [prescription, setPrescription] = useState('');
     const [treatmentUpdate, setTreatmentUpdate] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handlePatientSelect = (patient) => {
         setSelectedPatient(patient);
@@ -57,6 +60,10 @@ const PatientManagement = () => {
         }
     };
 
+    const filteredPatients = patients.filter(patient =>
+        patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="p-5 bg-white rounded shadow-md">
             <h2 className="text-2xl font-bold mb-4">Patient Management</h2>
@@ -64,11 +71,18 @@ const PatientManagement = () => {
             <div className="flex space-x-4">
                 <div className="w-1/4">
                     <h3 className="text-xl font-semibold mb-2">Patient List</h3>
+                    <input
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        placeholder="Search patients..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                     <ul className="space-y-2">
-                        {patients.map((patient) => (
+                        {filteredPatients.map((patient) => (
                             <li key={patient.id}>
                                 <button
-                                    className="w-full text-left p-2 bg-gray-100 hover:bg-gray-200 rounded"
+                                    className={`w-full text-left p-2 ${selectedPatient?.id === patient.id ? 'bg-blue-200' : 'bg-gray-100 hover:bg-gray-200'} rounded`}
                                     onClick={() => handlePatientSelect(patient)}
                                 >
                                     {patient.name}

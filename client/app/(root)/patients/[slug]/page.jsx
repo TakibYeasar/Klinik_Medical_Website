@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   PetLeftSidebar,
   MyProfile,
-  RegisterForm,
   MyAppointments,
   MedicalRecordsAccess,
   HealthTracking,
@@ -38,10 +37,8 @@ const PatientDashboard = () => {
     switch (activeSection) {
       case 'myProfile':
         return <MyProfile />;
-      case 'register':
-        return <RegisterForm />;
       case 'myAppointments':
-        return <MyAppointments appointments={appointments} />;
+        return <MyAppointments />;
       case 'medicalRecordsAccess':
         return <MedicalRecordsAccess />;
       case 'healthTracking':

@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Doctors } from "../../constants";
-import { SubmitButton } from "..";
 
 const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -198,9 +197,13 @@ const AppointmentForm = ({ type = "create", appointment, setOpen }) => {
           </div>
         )}
 
-        <SubmitButton isLoading={isLoading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-md py-2">
-          {buttonLabel}
-        </SubmitButton>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full rounded-md py-2 text-white ${isLoading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} transition`}
+        >
+          {isLoading ? "Processing..." : buttonLabel}
+        </button>
       </form>
     </div>
   );

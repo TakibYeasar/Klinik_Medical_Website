@@ -1,7 +1,7 @@
 // components/DoctorProfile.jsx
 import Link from 'next/link';
 import React from 'react';
-import {DoctorDetails} from '../../../../../components';
+import { DoctorDetails } from '../../../../../components';
 import { FaStar } from 'react-icons/fa';
 
 const DoctorProfile = () => {
@@ -43,6 +43,26 @@ const DoctorProfile = () => {
             {/* Doctor Profile Section */}
             <DoctorDetails doctor={doctor} />
 
+            {/* Bio and Specialties Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Biography</h3>
+                <p className="text-gray-700 mb-4">{doctor.bio}</p>
+                <h4 className="text-lg font-medium text-gray-800 mb-2">Specialties</h4>
+                <ul className="list-disc pl-5 text-gray-700">
+                    {doctor.specialties.map((specialty, index) => (
+                        <li key={index}>{specialty}</li>
+                    ))}
+                </ul>
+                <h4 className="text-lg font-medium text-gray-800 mt-4 mb-2">Education</h4>
+                <ul className="list-none text-gray-700">
+                    {doctor.education.map((edu, index) => (
+                        <li key={index}>
+                            {edu.degree}, {edu.institution} ({edu.year})
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
             {/* Availability Schedule Section */}
             <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Availability Schedule</h3>
@@ -57,7 +77,7 @@ const DoctorProfile = () => {
             </div>
 
             {/* Patient Reviews Section */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Patient Reviews</h3>
                 {doctor.reviews.map((review, index) => (
                     <div key={index} className="mb-4">
@@ -70,6 +90,23 @@ const DoctorProfile = () => {
                         </p>
                     </div>
                 ))}
+            </div>
+
+            {/* Contact Information Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Contact Information</h3>
+                <p className="text-gray-700">Phone: {doctor.contact.phone}</p>
+                <p className="text-gray-700">Email: <a href={`mailto:${doctor.contact.email}`} className="text-blue-600 hover:underline">{doctor.contact.email}</a></p>
+            </div>
+
+            {/* Social Links Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Connect with Dr. John Doe</h3>
+                <div className="flex space-x-4">
+                    <a href={doctor.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Facebook</a>
+                    <a href={doctor.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Twitter</a>
+                    <a href={doctor.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">LinkedIn</a>
+                </div>
             </div>
 
             <Link href={`/appointment`} className="mt-8 text-center">

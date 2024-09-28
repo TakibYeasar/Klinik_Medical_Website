@@ -41,14 +41,14 @@ const Testimonial = () => {
     });
 
     if (IsLoading) {
-        return <h3>loading ...</h3>;
+        return <h3 className="text-center text-xl">Loading...</h3>;
     }
 
     return (
-        <div className="container my-20">
-            <div className="text-center">
-                <p className="border border-primary-color rounded-full px-4 py-2 w-60 text-center text-xl font-medium">Testimonial</p>
-                <h1 className='main-title'>What Say Our Patients!</h1>
+        <div className="container my-20 px-4">
+            <div className="text-center mb-8">
+                <p className="border border-primary-color rounded-full px-6 py-2 text-xl font-semibold">Testimonial</p>
+                <h1 className='text-3xl font-bold mt-4'>What Say Our Patients!</h1>
             </div>
 
             {/* Testimonial section with swipeable and hover effect */}
@@ -67,11 +67,11 @@ const Testimonial = () => {
                             className="flex justify-center"
                         >
                             <div className="my-8 text-center items-center">
-                                <img className="h-16 w-16 rounded-full border border-primary-color m-4" src={testdata[currentIndex]?.image} alt='' />
-                                <div className="bg-primary-color w-[40vw] p-6 rounded-md">
-                                    <p className='text-xl font-normal text-font-light mb-4'>{testdata[currentIndex]?.description}</p>
-                                    <h5 className="text-xl font-medium text-font-light">{testdata[currentIndex]?.name}</h5>
-                                    <span className="text-xl font-normal text-font-light">{testdata[currentIndex]?.profession}</span>
+                                <img className="h-20 w-20 rounded-full border-4 border-primary-color m-4" src={testdata[currentIndex]?.image} alt='' />
+                                <div className="bg-primary-color w-[90%] md:w-[40vw] p-6 rounded-md shadow-lg">
+                                    <p className='text-lg font-normal text-font-light mb-4'>{testdata[currentIndex]?.description}</p>
+                                    <h5 className="text-lg font-semibold text-font-light">{testdata[currentIndex]?.name}</h5>
+                                    <span className="text-lg font-normal text-font-light">{testdata[currentIndex]?.profession}</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -80,13 +80,13 @@ const Testimonial = () => {
 
                 {/* Slider Controls - hidden by default, shown on hover */}
                 <button
-                    className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute left-8 md:left-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     onClick={prevTestimonial}
                 >
                     {"<"}
                 </button>
                 <button
-                    className="absolute right-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute right-8 md:right-16 top-1/2 transform -translate-y-1/2 bg-primary-color text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     onClick={nextTestimonial}
                 >
                     {">"}
@@ -99,7 +99,7 @@ const Testimonial = () => {
                     <button
                         key={i}
                         onClick={() => setCurrentIndex(i)}
-                        className={`w-4 h-4 mx-2 rounded-full ${currentIndex === i ? 'bg-primary-color' : 'bg-gray-300'}`}
+                        className={`w-4 h-4 mx-2 rounded-full transition duration-300 ${currentIndex === i ? 'bg-primary-color' : 'bg-gray-300 hover:bg-gray-400'}`}
                     />
                 ))}
             </div>

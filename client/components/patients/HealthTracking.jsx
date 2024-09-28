@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { FaChartLine, FaPlusCircle, FaWeight, FaHeartbeat } from 'react-icons/fa';
+import { FaChartLine, FaPlusCircle, FaWeight, FaHeartbeat, FaBell } from 'react-icons/fa';
 
 const HealthTracking = () => {
     // Sample health metrics data
@@ -36,19 +36,42 @@ const HealthTracking = () => {
         },
     ]);
 
-    // Handler to add a new health metric
+    // Sample notifications
+    const [notifications] = useState([
+        { id: 1, message: "Don't forget to track your weight today." },
+        { id: 2, message: 'You’re halfway through your blood pressure goal!' },
+    ]);
+
+    // Handlers
     const handleAddMetric = () => {
         alert('Add health metric functionality not implemented.');
     };
 
-    // Handler to add a new health goal
     const handleAddGoal = () => {
         alert('Add health goal functionality not implemented.');
     };
 
+    const handleViewProgressChart = () => {
+        alert('View progress chart functionality not implemented.');
+    };
+
     return (
         <div className="container mx-auto p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Health Tracking</h2>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-8">Health Tracking Dashboard</h2>
+
+            {/* Notifications Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <FaBell className="mr-2" /> Notifications
+                </h3>
+                <ul className="space-y-2">
+                    {notifications.map((notification) => (
+                        <li key={notification.id} className="text-gray-700 p-2 border-b">
+                            {notification.message}
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
             {/* Health Metrics Section */}
             <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
@@ -58,11 +81,11 @@ const HealthTracking = () => {
                         <li key={metric.id} className="flex justify-between items-center p-4 border-b">
                             <div>
                                 <p className="font-medium text-gray-800">{metric.date}</p>
-                                <p className="text-gray-600">
-                                    <FaWeight className="inline-block mr-2" /> Weight: {metric.weight}
+                                <p className="text-gray-600 flex items-center">
+                                    <FaWeight className="mr-2" /> Weight: {metric.weight}
                                 </p>
-                                <p className="text-gray-600">
-                                    <FaHeartbeat className="inline-block mr-2" /> Blood Pressure: {metric.bloodPressure}
+                                <p className="text-gray-600 flex items-center">
+                                    <FaHeartbeat className="mr-2" /> Blood Pressure: {metric.bloodPressure}
                                 </p>
                                 <p className="text-gray-500">Symptoms: {metric.symptoms}</p>
                             </div>
@@ -111,7 +134,7 @@ const HealthTracking = () => {
                     Track your health goals and visualize progress over time.
                 </p>
                 <button
-                    onClick={() => alert('View progress chart functionality not implemented.')}
+                    onClick={handleViewProgressChart}
                     className="mt-4 bg-primary text-white py-3 px-6 rounded-md shadow-lg hover:bg-secondary transition duration-300"
                 >
                     <FaChartLine className="inline-block mr-2" /> View Progress Chart
