@@ -2,17 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FiSearch, FiCheckCircle, FiXCircle, FiEye, FiTrash2 } from "react-icons/fi";
+import { FiSearch, FiCheckCircle, FiXCircle, FiEye, FiTrash2, FiStar } from "react-icons/fi";
 import ReactPaginate from "react-paginate";
+import { Tooltip } from "react-tooltip";
 
 // Dummy data for providers
 const dummyProviders = [
-    { id: 1, name: "Dr. John Doe", specialty: "Cardiology", email: "john.doe@example.com", experience: 12, isApproved: false },
-    { id: 2, name: "Dr. Jane Smith", specialty: "Pediatrics", email: "jane.smith@example.com", experience: 8, isApproved: true },
-    { id: 3, name: "Dr. Emily Johnson", specialty: "Dermatology", email: "emily.johnson@example.com", experience: 15, isApproved: true },
-    { id: 4, name: "Dr. Mark Spencer", specialty: "Neurology", email: "mark.spencer@example.com", experience: 10, isApproved: false },
-    { id: 5, name: "Dr. Alex Moore", specialty: "Orthopedics", email: "alex.moore@example.com", experience: 7, isApproved: true },
-    { id: 6, name: "Dr. Susan White", specialty: "Oncology", email: "susan.white@example.com", experience: 20, isApproved: false },
+    { id: 1, name: "Dr. John Doe", specialty: "Cardiology", email: "john.doe@example.com", experience: 12, isApproved: false, rating: 4.5, reviews: 45 },
+    { id: 2, name: "Dr. Jane Smith", specialty: "Pediatrics", email: "jane.smith@example.com", experience: 8, isApproved: true, rating: 4.8, reviews: 52 },
+    { id: 3, name: "Dr. Emily Johnson", specialty: "Dermatology", email: "emily.johnson@example.com", experience: 15, isApproved: true, rating: 4.2, reviews: 38 },
+    { id: 4, name: "Dr. Mark Spencer", specialty: "Neurology", email: "mark.spencer@example.com", experience: 10, isApproved: false, rating: 3.9, reviews: 29 },
+    { id: 5, name: "Dr. Alex Moore", specialty: "Orthopedics", email: "alex.moore@example.com", experience: 7, isApproved: true, rating: 4.7, reviews: 48 },
+    { id: 6, name: "Dr. Susan White", specialty: "Oncology", email: "susan.white@example.com", experience: 20, isApproved: false, rating: 4.9, reviews: 67 },
 ];
 
 const ManageDoctors = () => {
@@ -75,25 +76,25 @@ const ManageDoctors = () => {
 
     return (
         <div className="container mx-auto px-4 py-6">
-            <h2 className="text-3xl font-bold text-center mb-8">Manage Healthcare Providers</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-blue-800">Manage Healthcare Providers</h2>
 
             {/* Search and Filter Bar */}
             <div className="flex justify-between items-center mb-6">
-                <div className="relative">
+                <div className="relative w-full md:w-1/2">
                     <input
                         type="text"
-                        placeholder="Search by name..."
+                        placeholder="Search by name or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="border border-gray-300 rounded-lg py-2 px-4 pl-10 focus:ring-blue-500 focus:border-blue-500"
+                        className="border border-gray-300 rounded-lg py-2 px-4 pl-10 focus:ring-blue-500 focus:border-blue-500 w-full"
                     />
                     <FiSearch className="absolute top-3 left-3 text-gray-500" />
                 </div>
-                <div>
+                <div className="relative w-full md:w-1/4">
                     <select
                         value={filterSpecialty}
                         onChange={(e) => setFilterSpecialty(e.target.value)}
-                        className="border border-gray-300 rounded-lg py-2 px-4 focus:ring-blue-500 focus:border-blue-500"
+                        className="border border-gray-300 rounded-lg py-2 px-4 focus:ring-blue-500 focus:border-blue-500 w-full"
                     >
                         <option value="">All Specialties</option>
                         <option value="Cardiology">Cardiology</option>
@@ -110,42 +111,52 @@ const ManageDoctors = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {displayedProviders.map((provider) => (
                     <div key={provider.id} className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-                        <div className="p-4">
-                            <h3 className="text-xl font-semibold text-gray-800">{provider.name}</h3>
-                            <p className="text-gray-600">Specialty: {provider.specialty}</p>
-                            <p className="text-gray-600">Experience: {provider.experience} years</p>
+                        <div className="p-4 relative">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-xl font-semibold text-gray-800">{provider.name}</h3>
+                                <div className="flex items-center">
+                                    <FiStar className="text-yellow-400 mr-1" />
+                                    <span className="text-gray-600 text-sm">{provider.rating} ({provider.reviews} reviews)</span>
+                                </div>
+                            </div>
+                            <p className="text-gray-600 mb-1">Specialty: {provider.specialty}</p>
+                            <p className="text-gray-600 mb-1">Experience: {provider.experience} years</p>
                             <p className="text-gray-600">Email: {provider.email}</p>
                             <div className="mt-4 flex justify-between items-center space-x-2">
                                 {!provider.isApproved ? (
-                                    <>
+                                    <div className="flex items-center space-x-2">
                                         <button
                                             onClick={() => handleApproveProvider(provider.id)}
                                             className="text-sm flex items-center bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 transition"
                                         >
                                             <FiCheckCircle className="mr-2" /> Approve
                                         </button>
-                                        <button
-                                            onClick={() => handleRejectProvider(provider.id)}
-                                            className="text-sm flex items-center bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition"
-                                        >
-                                            <FiXCircle className="mr-2" /> Reject
-                                        </button>
-                                    </>
+                                        <Tooltip message="Rejecting will remove the provider">
+                                            <button
+                                                onClick={() => handleRejectProvider(provider.id)}
+                                                className="text-sm flex items-center bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition"
+                                            >
+                                                <FiXCircle className="mr-2" /> Reject
+                                            </button>
+                                        </Tooltip>
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className="flex items-center space-x-2">
                                         <button
                                             onClick={() => handleViewProfile(provider)}
                                             className="text-sm flex items-center bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600 transition"
                                         >
                                             <FiEye className="mr-2" /> View Profile
                                         </button>
-                                        <button
-                                            onClick={() => handleRemoveProvider(provider.id)}
-                                            className="text-sm flex items-center bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition"
-                                        >
-                                            <FiTrash2 className="mr-2" /> Remove
-                                        </button>
-                                    </>
+                                        <Tooltip message="Remove the provider permanently">
+                                            <button
+                                                onClick={() => handleRemoveProvider(provider.id)}
+                                                className="text-sm flex items-center bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition"
+                                            >
+                                                <FiTrash2 className="mr-2" /> Remove
+                                            </button>
+                                        </Tooltip>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -175,32 +186,25 @@ const ManageDoctors = () => {
             {/* View Provider Profile Modal */}
             {viewProfile && (
                 <motion.div
-                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                 >
-                    <motion.div
-                        className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full"
-                        initial={{ scale: 0.9 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0.9 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    >
-                        <h3 className="text-2xl font-semibold mb-4">Provider Profile</h3>
-                        <p className="text-xl font-semibold">Name: {viewProfile.name}</p>
-                        <p className="text-gray-600">Specialty: {viewProfile.specialty}</p>
-                        <p className="text-gray-600">Experience: {viewProfile.experience} years</p>
-                        <p className="text-gray-600">Email: {viewProfile.email}</p>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={closeModal}
-                                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </motion.div>
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/3">
+                        <h3 className="text-xl font-semibold mb-4">{viewProfile.name}'s Profile</h3>
+                        <p className="text-gray-700 mb-2">Specialty: {viewProfile.specialty}</p>
+                        <p className="text-gray-700 mb-2">Experience: {viewProfile.experience} years</p>
+                        <p className="text-gray-700 mb-4">Email: {viewProfile.email}</p>
+                        <p className="text-gray-700 mb-2">Rating: {viewProfile.rating}</p>
+                        <p className="text-gray-700 mb-4">Reviews: {viewProfile.reviews}</p>
+                        <button
+                            onClick={closeModal}
+                            className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+                        >
+                            Close
+                        </button>
+                    </div>
                 </motion.div>
             )}
         </div>

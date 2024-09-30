@@ -21,7 +21,6 @@ export { default as Pagination } from "./containers/Pagination";
 export { default as ManageUsers } from "./admin/ManageUsers";
 export { default as ManageDoctors } from "./admin/ManageDoctors";
 export { default as ManagePatients } from "./admin/ManagePatients";
-export { default as ManageAppointments } from "./admin/ManageAppointments";
 export { default as ManageMedicalRecords } from "./admin/ManageMedicalRecords";
 export { default as FinanceManagement } from "./admin/FinanceManagement";
 export { default as ReportingAnalytics } from "./admin/ReportingAnalytics";

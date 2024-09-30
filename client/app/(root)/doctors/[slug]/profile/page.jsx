@@ -1,7 +1,5 @@
-// components/DoctorProfile.jsx
 import Link from 'next/link';
 import React from 'react';
-import { DoctorDetails } from '../../../../../components';
 import { FaStar } from 'react-icons/fa';
 
 const DoctorProfile = () => {
@@ -41,7 +39,18 @@ const DoctorProfile = () => {
     return (
         <div className="container mx-auto p-8">
             {/* Doctor Profile Section */}
-            <DoctorDetails doctor={doctor} />
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <div className="flex items-center space-x-4">
+                    <img src={doctor.profilePhoto} alt={`${doctor.name}`} className="w-24 h-24 rounded-full object-cover" />
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-800">{doctor.name}</h2>
+                        <div className="flex items-center text-yellow-500">
+                            <FaStar className="mr-1" />
+                            <span>{doctor.ratings} / 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Bio and Specialties Section */}
             <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
@@ -96,7 +105,9 @@ const DoctorProfile = () => {
             <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Contact Information</h3>
                 <p className="text-gray-700">Phone: {doctor.contact.phone}</p>
-                <p className="text-gray-700">Email: <a href={`mailto:${doctor.contact.email}`} className="text-blue-600 hover:underline">{doctor.contact.email}</a></p>
+                <p className="text-gray-700">
+                    Email: <a href={`mailto:${doctor.contact.email}`} className="text-blue-600 hover:underline">{doctor.contact.email}</a>
+                </p>
             </div>
 
             {/* Social Links Section */}
@@ -109,11 +120,14 @@ const DoctorProfile = () => {
                 </div>
             </div>
 
-            <Link href={`/appointment`} className="mt-8 text-center">
-                <button className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition">
-                    Book an Appointment
-                </button>
-            </Link>
+            {/* Book Appointment Button */}
+            <div className="text-center">
+                <Link href={`/appointment`}>
+                    <button className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition">
+                        Book an Appointment
+                    </button>
+                </Link>
+            </div>
         </div>
     );
 };

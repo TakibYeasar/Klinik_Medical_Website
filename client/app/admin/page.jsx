@@ -56,14 +56,6 @@ const AdminDashboard = () => {
           </li>
           <li>
             <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'appointments' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('appointments')}
-            >
-              Manage Appointments
-            </button>
-          </li>
-          <li>
-            <button
               className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'medicalRecords' ? 'bg-gray-600' : ''}`}
               onClick={() => handleSectionChange('medicalRecords')}
             >
@@ -117,13 +109,6 @@ const AdminDashboard = () => {
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Doctors</h2>
               <ManageDoctors />
-            </div>
-          )}
-
-          {activeSection === 'appointments' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Manage Appointments</h2>
-              <ManageAppointments appointments={appointments} />
             </div>
           )}
 

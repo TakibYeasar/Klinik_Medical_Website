@@ -1,23 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion"; // Importing framer-motion for animations
-import { FaUserMd, FaUserInjured, FaTrashAlt, FaPlus, FaSearch } from "react-icons/fa"; // Icons for better visuals
+import { motion } from "framer-motion";
+import {
+    FaUserMd, FaUserInjured, FaTrashAlt, FaPlus, FaSearch, FaEye, FaEdit
+} from "react-icons/fa";
+import { isEmail } from "validator"; // Import validator for form validation
 
 const ManageUsers = () => {
-    // Dummy data for users
     const [users, setUsers] = useState([
-        { id: 1, name: "John Doe", email: "john@example.com", role: "Patient" },
-        { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Doctor" },
-        { id: 3, name: "Michael Johnson", email: "michael@example.com", role: "Patient" },
+        { id: 1, name: "John Doe", email: "john@example.com", role: "Patient", profileUrl: "/profile/john" },
+        { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Doctor", profileUrl: "/profile/jane" },
+        { id: 3, name: "Michael Johnson", email: "michael@example.com", role: "Patient", profileUrl: "/profile/michael" },
     ]);
 
-    // State for search query and new user form
     const [searchQuery, setSearchQuery] = useState("");
     const [newUser, setNewUser] = useState({ name: "", email: "", role: "Patient" });
-
-    // State for modal control
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // Items per page for pagination
 
     const handleRoleChange = (id, newRole) => {
         setUsers(users.map(user => user.id === id ? { ...user, role: newRole } : user));
@@ -31,13 +32,13 @@ const ManageUsers = () => {
 
     const handleAddUser = (e) => {
         e.preventDefault();
-        if (newUser.name && newUser.email) {
-            const newId = users.length ? Math.max(...users.map(user => user.id)) + 1 : 1; // Generate new ID
-            setUsers([...users, { id: newId, ...newUser }]);
-            setNewUser({ name: "", email: "", role: "Patient" }); // Reset form
-            setIsModalOpen(false); // Close modal after adding user
+        if (newUser.name && isEmail(newUser.email)) {
+            const newId = users.length ? Math.max(...users.map(user => user.id)) + 1 : 1;
+            setUsers([...users, { id: newId, ...newUser, profileUrl: `/profile/${newUser.name.toLowerCase().replace(" ", "-")}` }]);
+            setNewUser({ name: "", email: "", role: "Patient" });
+            setIsModalOpen(false);
         } else {
-            alert("Please fill in all fields");
+            alert("Please fill in valid details.");
         }
     };
 
@@ -46,16 +47,22 @@ const ManageUsers = () => {
         user.email.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-4xl font-bold text-center mb-8 text-gray-800">Admin Dashboard - Manage Users</h2>
 
-            {/* Search Bar */}
+            {/* Search Bar and Add User Button */}
             <div className="flex items-center justify-between mb-6">
                 <div className="relative w-1/2">
                     <input
                         type="text"
-                        placeholder="Search users..."
+                        placeholder="Search users by name or email..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="border border-gray-300 rounded-lg p-3 w-full pl-10 focus:ring-blue-500 focus:border-blue-500"
@@ -75,7 +82,7 @@ const ManageUsers = () => {
                 className="bg-white shadow-lg rounded-lg p-6 overflow-x-auto"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }} // Animation transition
+                transition={{ duration: 0.3 }}
             >
                 <table className="min-w-full table-auto">
                     <thead>
@@ -87,13 +94,13 @@ const ManageUsers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map(user => (
+                        {currentUsers.map(user => (
                             <motion.tr
                                 key={user.id}
                                 className="border-b text-gray-800"
-                                initial={{ opacity: 0, x: -20 }} // Initial position for the row
-                                animate={{ opacity: 1, x: 0 }} // Final position for the row
-                                transition={{ duration: 0.2 }} // Animation duration for the row
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 <td className="px-4 py-3 flex items-center">
                                     {user.role === "Doctor" ? <FaUserMd className="text-blue-600 mr-2" /> : <FaUserInjured className="text-red-600 mr-2" />}
@@ -110,7 +117,10 @@ const ManageUsers = () => {
                                         <option value="Doctor">Doctor</option>
                                     </select>
                                 </td>
-                                <td className="px-4 py-3">
+                                <td className="px-4 py-3 flex space-x-2">
+                                    <a href={user.profileUrl} className="bg-green-500 text-white rounded-lg p-2 hover:bg-green-600">
+                                        <FaEye /> View
+                                    </a>
                                     <button
                                         onClick={() => handleDeleteUser(user.id)}
                                         className="bg-red-500 text-white rounded-lg p-2 hover:bg-red-600"
@@ -124,9 +134,28 @@ const ManageUsers = () => {
                 </table>
             </motion.div>
 
+            {/* Pagination */}
+            <div className="flex justify-between items-center mt-4">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                    className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Previous
+                </button>
+                <span className="text-gray-600">Page {currentPage} of {totalPages}</span>
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
+
             {/* Modal for Adding User */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <motion.div
                         className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
                         initial={{ scale: 0.8, opacity: 0 }}
@@ -165,14 +194,11 @@ const ManageUsers = () => {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="bg-gray-500 text-white rounded-lg p-2 hover:bg-gray-600"
+                                    className="bg-gray-400 text-white rounded-lg p-3 hover:bg-gray-500"
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit"
-                                    className="bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700"
-                                >
+                                <button type="submit" className="bg-blue-600 text-white rounded-lg p-3 hover:bg-blue-700">
                                     Add User
                                 </button>
                             </div>
