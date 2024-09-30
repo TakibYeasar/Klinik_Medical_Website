@@ -19,67 +19,125 @@ const AppointmentScheduling = () => {
         { date: '2024-09-30', times: ['10:30 AM', '12:00 PM', '4:00 PM'] },
     ];
 
-    const [appointments] = useState(dummyAppointments);
+    const [appointments, setAppointments] = useState(dummyAppointments);
     const [availableSlots] = useState(dummyAvailableSlots);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState('');
     const [patientName, setPatientName] = useState('');
+    const [editMode, setEditMode] = useState(false);
+    const [appointmentToEdit, setAppointmentToEdit] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleConfirmAppointment = () => {
-        if (selectedDate && selectedTime && patientName) {
-            // Here you can handle the appointment confirmation logic
-            alert(`Appointment confirmed for ${patientName} on ${selectedDate} at ${selectedTime}`);
-            // Reset selections
-            setSelectedDate(null);
-            setSelectedTime('');
-            setPatientName('');
-        } else {
-            alert('Please select a date, time, and enter patient name.');
+        if (!patientName || !selectedDate || !selectedTime) {
+            setErrorMessage('Please fill in all fields.');
+            return;
         }
+
+        const newAppointment = {
+            id: appointments.length + 1,
+            patientName,
+            date: selectedDate,
+            time: selectedTime,
+        };
+
+        setAppointments([...appointments, newAppointment]);
+        setPatientName('');
+        setSelectedDate(null);
+        setSelectedTime('');
+        setErrorMessage('');
+        alert(`Appointment confirmed for ${patientName} on ${selectedDate} at ${selectedTime}`);
+    };
+
+    const handleCancelAppointment = (id) => {
+        setAppointments(appointments.filter(appointment => appointment.id !== id));
+    };
+
+    const handleEditAppointment = (appointment) => {
+        setEditMode(true);
+        setAppointmentToEdit(appointment);
+        setPatientName(appointment.patientName);
+        setSelectedDate(appointment.date);
+        setSelectedTime(appointment.time);
+    };
+
+    const handleUpdateAppointment = () => {
+        const updatedAppointments = appointments.map((appointment) =>
+            appointment.id === appointmentToEdit.id
+                ? { ...appointment, patientName, date: selectedDate, time: selectedTime }
+                : appointment
+        );
+
+        setAppointments(updatedAppointments);
+        setEditMode(false);
+        setAppointmentToEdit(null);
+        setPatientName('');
+        setSelectedDate(null);
+        setSelectedTime('');
+        setErrorMessage('');
+        alert('Appointment updated successfully.');
     };
 
     return (
-        <div id="appointment-scheduling" className='mt-6'>
-            <h3 className='font-semibold text-lg text-gray-900'>Appointment Scheduling</h3>
+        <div id="appointment-scheduling" className="p-6 bg-white rounded-xl shadow-lg">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Appointment Scheduling</h2>
 
             {/* Upcoming Appointments Section */}
-            <div className='mt-4'>
-                <h4 className='font-medium text-md text-gray-800'>Upcoming Appointments</h4>
-                <ul className='mt-2 space-y-2'>
+            <div className="mb-10">
+                <h3 className="text-2xl font-semibold text-gray-800">Upcoming Appointments</h3>
+                <ul className="mt-4 space-y-4">
                     {appointments.length > 0 ? appointments.map((appointment) => (
-                        <li key={appointment.id} className='border p-4 rounded shadow-sm bg-white'>
-                            <p className='font-semibold'>{appointment.patientName}</p>
-                            <p className='text-sm text-gray-600'>Date: {appointment.date}</p>
-                            <p className='text-sm text-gray-600'>Time: {appointment.time}</p>
+                        <li key={appointment.id} className="border rounded-xl p-4 shadow-sm bg-gray-50 hover:bg-gray-100 transition-all">
+                            <p className="text-xl font-semibold">{appointment.patientName}</p>
+                            <p className="text-gray-600 mt-1">Date: {appointment.date}</p>
+                            <p className="text-gray-600">Time: {appointment.time}</p>
+                            <div className="flex justify-end mt-3">
+                                <button
+                                    onClick={() => handleEditAppointment(appointment)}
+                                    className="text-blue-500 mr-4"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleCancelAppointment(appointment.id)}
+                                    className="text-red-500"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </li>
                     )) : (
-                        <p className='text-gray-500'>No upcoming appointments.</p>
+                        <p className="text-gray-500">No upcoming appointments.</p>
                     )}
                 </ul>
             </div>
 
             {/* Appointment Form Section */}
-            <div className='mt-6 bg-white p-4 rounded shadow'>
-                <h4 className='font-medium text-md text-gray-800'>Schedule New Appointment</h4>
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+                    {editMode ? 'Edit Appointment' : 'Schedule New Appointment'}
+                </h3>
+
                 <input
                     type="text"
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
                     placeholder="Enter Patient Name"
-                    className='border rounded p-2 mb-2 w-full'
+                    className="w-full border-gray-300 rounded-xl p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
                 {/* Available Slots Section */}
-                <h4 className='font-medium text-md text-gray-800 mt-4'>Available Dates</h4>
-                <div className='flex gap-4 overflow-x-auto mt-2'>
+                <h4 className="text-xl font-medium text-gray-800 mb-2">Available Dates</h4>
+                <div className="flex gap-4 overflow-x-auto mb-4">
                     {availableSlots.map((slot, index) => (
                         <div
                             key={index}
                             onClick={() => setSelectedDate(slot.date)}
-                            className={`text-center py-3 px-4 rounded-full cursor-pointer transition-colors duration-200 ${selectedDate === slot.date ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 border border-gray-300'}`}
+                            className={`text-center py-3 px-4 cursor-pointer transition-colors duration-200 rounded-xl ${selectedDate === slot.date ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+                                }`}
                         >
-                            <p className='font-medium'>{daysOfWeek[new Date(slot.date).getDay()]}</p>
-                            <p className='font-light'>{new Date(slot.date).getDate()}</p>
+                            <p className="font-medium">{daysOfWeek[new Date(slot.date).getDay()]}</p>
+                            <p className="text-lg">{new Date(slot.date).getDate()}</p>
                         </div>
                     ))}
                 </div>
@@ -87,13 +145,14 @@ const AppointmentScheduling = () => {
                 {/* Time Slots for Selected Date */}
                 {selectedDate && (
                     <>
-                        <h4 className='font-medium text-md text-gray-800 mt-4'>Available Time Slots</h4>
-                        <div className='flex items-center gap-4 overflow-x-auto mt-2'>
+                        <h4 className="text-xl font-medium text-gray-800 mb-2">Available Time Slots</h4>
+                        <div className="flex gap-4 overflow-x-auto mb-4">
                             {availableSlots.find(slot => slot.date === selectedDate)?.times.map((time, index) => (
                                 <p
                                     key={index}
                                     onClick={() => setSelectedTime(time)}
-                                    className={`text-sm font-light flex-shrink-0 px-4 py-2 rounded-full cursor-pointer transition-colors duration-200 ${time === selectedTime ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400 border border-gray-300'}`}
+                                    className={`px-6 py-2 cursor-pointer text-center transition-colors duration-200 rounded-full ${selectedTime === time ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+                                        }`}
                                 >
                                     {time}
                                 </p>
@@ -102,12 +161,16 @@ const AppointmentScheduling = () => {
                     </>
                 )}
 
-                {/* Confirm Appointment Button */}
+                {errorMessage && (
+                    <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
+                )}
+
+                {/* Confirm or Update Appointment Button */}
                 <button
-                    onClick={handleConfirmAppointment}
-                    className='bg-primary text-white text-sm font-medium px-6 py-3 rounded-full my-6 hover:bg-primary-dark transition duration-200'
+                    onClick={editMode ? handleUpdateAppointment : handleConfirmAppointment}
+                    className="w-full bg-blue-600 text-white text-lg font-medium py-3 rounded-xl hover:bg-blue-700 transition-all"
                 >
-                    Confirm Appointment
+                    {editMode ? 'Update Appointment' : 'Confirm Appointment'}
                 </button>
             </div>
         </div>

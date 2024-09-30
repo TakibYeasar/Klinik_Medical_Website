@@ -17,8 +17,8 @@ const DocLeftSidebar = ({ setActiveSection }) => {
                 </button>
             </li>
             <li>
-                <button onClick={() => setActiveSection('prescriptions')} className="w-full text-left p-2 rounded hover:bg-gray-700">
-                    Prescription Management
+                <button onClick={() => setActiveSection('feedback')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Feedback Management
                 </button>
             </li>
         </ul>

@@ -11,6 +11,7 @@ export { default as Aboutus } from "./containers/Aboutus";
 export { default as Service } from "./containers/Service";
 export { default as Feature } from "./containers/Feature";
 export { default as Doctors } from "./containers/Doctors";
+export { default as PatientOnboarding } from "./containers/PatientOnboarding";
 export { default as Contact } from "./containers/Contact";
 export { default as Testimonial } from "./containers/Testimonial";
 export { default as Pagination } from "./containers/Pagination";
@@ -41,6 +42,6 @@ export { default as ReletedDoctors } from "./doctors/RelatedDoctors";
 export { default as DoctorDetails } from "./doctors/DoctorDetails";
 export { default as DocLeftSidebar } from "./doctors/DocLeftSidebar";
 export { default as PatientManagement } from "./doctors/PatientManagement";
-export { default as PrescriptionManagement } from "./doctors/PrescriptionManagement";
+export { default as FeedbackManagement } from "./doctors/FeedbackManagement";
 export { default as AppointmentScheduling } from "./doctors/AppointmentScheduling";
 

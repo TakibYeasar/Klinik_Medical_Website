@@ -11,6 +11,9 @@ const Doctors = () => {
     const [availableOnly, setAvailableOnly] = useState(false);
     const [minExperience, setMinExperience] = useState(0);
     const [speciality, setSpeciality] = useState("");
+    const [location, setLocation] = useState("");
+    const [services, setServices] = useState("");
+    const [languages, setLanguages] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     const router = useRouter();
@@ -28,6 +31,9 @@ const Doctors = () => {
             available: true,
             ratings: 4.5,
             contact: "jane.smith@hospital.com",
+            location: "New York",
+            services: ["Heart Surgery", "Cardiac Consultation"],
+            languages: ["English", "Spanish"],
         },
         {
             id: 2,
@@ -38,6 +44,9 @@ const Doctors = () => {
             available: false,
             ratings: 4.2,
             contact: "john.doe@hospital.com",
+            location: "Los Angeles",
+            services: ["Brain Surgery", "Neuro Consultation"],
+            languages: ["English"],
         },
         {
             id: 3,
@@ -48,6 +57,9 @@ const Doctors = () => {
             available: true,
             ratings: 4.8,
             contact: "emily.davis@hospital.com",
+            location: "Chicago",
+            services: ["Skin Treatment", "Laser Therapy"],
+            languages: ["English", "French"],
         },
         // More doctors...
     ];
@@ -81,8 +93,15 @@ const Doctors = () => {
         const matchesAvailability = availableOnly ? doctor.available : true;
         const matchesExperience = doctor.experience >= minExperience;
         const matchesSpeciality = speciality ? doctor.dept === speciality : true;
+        const matchesLocation = location ? doctor.location.toLowerCase().includes(location.toLowerCase()) : true;
+        const matchesServices = services
+            ? doctor.services.some((service) => service.toLowerCase().includes(services.toLowerCase()))
+            : true;
+        const matchesLanguages = languages
+            ? doctor.languages.some((lang) => lang.toLowerCase().includes(languages.toLowerCase()))
+            : true;
 
-        return matchesName && matchesRating && matchesAvailability && matchesExperience && matchesSpeciality;
+        return matchesName && matchesRating && matchesAvailability && matchesExperience && matchesSpeciality && matchesLocation && matchesServices && matchesLanguages;
     });
 
     if (isLoading) {
@@ -91,9 +110,9 @@ const Doctors = () => {
 
     return (
         <div className="container mx-auto py-10 px-6">
-            <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Find the Best Specialists for You</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Find the Best Healthcare Providers</h1>
             <p className="text-gray-600 text-center mb-8 max-w-xl mx-auto">
-                Use the filters below to search for doctors by name, specialty, rating, availability, and experience.
+                Use the filters below to search for healthcare providers by name, specialty, location, rating, availability, services, and languages spoken.
             </p>
 
             {/* Search Filters */}
@@ -120,6 +139,15 @@ const Doctors = () => {
                     <option value="Pediatrics">Pediatrics</option>
                     <option value="General Physician">General Physician</option>
                 </select>
+
+                {/* Location Filter */}
+                <input
+                    type="text"
+                    placeholder="Search by location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="w-full py-3 px-4 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-500"
+                />
 
                 {/* Ratings Slider */}
                 <div>
@@ -168,6 +196,24 @@ const Doctors = () => {
                         className="w-full"
                     />
                 </div>
+
+                {/* Services Filter */}
+                <input
+                    type="text"
+                    placeholder="Search by services (e.g., surgery)"
+                    value={services}
+                    onChange={(e) => setServices(e.target.value)}
+                    className="w-full py-3 px-4 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-500"
+                />
+
+                {/* Languages Filter */}
+                <input
+                    type="text"
+                    placeholder="Search by languages spoken"
+                    value={languages}
+                    onChange={(e) => setLanguages(e.target.value)}
+                    className="w-full py-3 px-4 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-500"
+                />
             </div>
 
             {/* Doctors List */}
@@ -191,44 +237,37 @@ const Doctors = () => {
                                         <span className="ml-1 text-sm text-gray-800">{doctor.ratings}</span>
                                     </div>
                                 </div>
-                                <p className="text-gray-600 text-sm mb-4">{doctor.dept}</p>
-                                <p className="text-gray-500 text-sm">Experience: {doctor.experience} years</p>
-                                <div className="flex items-center gap-2 mt-4">
+                                <p className="text-sm text-gray-600">{doctor.dept}</p>
+                                <p className="text-sm text-gray-600 mt-2">
+                                    Experience: {doctor.experience} years
+                                </p>
+                                <p className="text-sm text-gray-600 mt-2">Location: {doctor.location}</p>
+                                <p className="text-sm text-gray-600 mt-2">Services: {doctor.services.join(", ")}</p>
+                                <p className="text-sm text-gray-600 mt-2">
+                                    Languages: {doctor.languages.join(", ")}
+                                </p>
+                                <p className="text-sm text-gray-600 mt-2 flex items-center">
                                     {doctor.available ? (
-                                        <div className="flex items-center text-green-600">
-                                            <FaCheckCircle className="mr-1" />
-                                            <span>Available</span>
-                                        </div>
+                                        <FaCheckCircle className="text-green-500 mr-1" />
                                     ) : (
-                                        <div className="flex items-center text-red-500">
-                                            <FaTimesCircle className="mr-1" />
-                                            <span>Not Available</span>
-                                        </div>
+                                        <FaTimesCircle className="text-red-500 mr-1" />
                                     )}
-                                </div>
-                                <div className="flex items-center gap-2 mt-4">
-                                    <FaEnvelope className="text-blue-500" />
-                                    <a
-                                        href={`mailto:${doctor.contact}`}
-                                        className="text-sm text-blue-500 underline hover:text-blue-700"
-                                    >
-                                        Contact: {doctor.contact}
-                                    </a>
-                                </div>
-                                {/* View Profile Button */}
-                                <button
-                                    onClick={() => router.push(`/doctors/${doctor.name}/profile`)}
-                                    className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
+                                    {doctor.available ? "Available" : "Unavailable"}
+                                </p>
+                                <a
+                                    href={`mailto:${doctor.contact}`}
+                                    className="flex items-center mt-4 text-blue-600 hover:underline"
                                 >
-                                    View Profile
-                                </button>
+                                    <FaEnvelope className="mr-2" />
+                                    Contact
+                                </a>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="col-span-full text-center text-gray-500">
-                        No doctors found matching your criteria.
-                    </div>
+                    <p className="text-center text-gray-600 col-span-3">
+                        No doctors found. Try adjusting your filters.
+                    </p>
                 )}
             </div>
         </div>
