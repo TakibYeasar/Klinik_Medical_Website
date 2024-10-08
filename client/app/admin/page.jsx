@@ -1,7 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { ManageUsers, ManageDoctors, ManagePatients, ManageAppointments, ManageMedicalRecords, FinanceManagement, ReportingAnalytics, SystemSettings } from '../../components';
+import React, { useState, useEffect } from "react";
+import {
+  ManageUsers,
+  ManageDoctors,
+  ManagePatients,
+  ManageAppointments,
+  ManageMedicalRecords,
+  FinanceManagement,
+  ReportingAnalytics,
+  SystemSettings,
+} from "../../components";
 
 // Fetch appointments from Django backend API
 const fetchAppointments = async () => {
@@ -11,7 +20,7 @@ const fetchAppointments = async () => {
 };
 
 const AdminDashboard = () => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState("");
   const [appointments, setAppointments] = useState({
     scheduledCount: 0,
     pendingCount: 0,
@@ -33,114 +42,82 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       {/* Sidebar */}
-      <div className="w-1/4 bg-gray-800 text-white min-h-screen p-5">
+      <aside className="w-1/4 bg-gray-800 text-white p-5">
         <h2 className="text-2xl font-bold mb-5">Admin Dashboard</h2>
         <ul className="space-y-4">
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'users' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('users')}
-            >
-              Manage Users
-            </button>
-          </li>
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'doctors' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('doctors')}
-            >
-              Manage Doctors
-            </button>
-          </li>
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'medicalRecords' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('medicalRecords')}
-            >
-              Medical Records
-            </button>
-          </li>
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'finance' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('finance')}
-            >
-              Finance Management
-            </button>
-          </li>
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'reporting' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('reporting')}
-            >
-              Reporting & Analytics
-            </button>
-          </li>
-          <li>
-            <button
-              className={`w-full text-left p-2 rounded hover:bg-gray-700 ${activeSection === 'settings' ? 'bg-gray-600' : ''}`}
-              onClick={() => handleSectionChange('settings')}
-            >
-              System Settings
-            </button>
-          </li>
+          {[
+            { label: "Manage Users", section: "users" },
+            { label: "Manage Doctors", section: "doctors" },
+            { label: "Medical Records", section: "medicalRecords" },
+            { label: "Finance Management", section: "finance" },
+            { label: "Reporting & Analytics", section: "reporting" },
+            { label: "System Settings", section: "settings" },
+          ].map(({ label, section }) => (
+            <li key={section}>
+              <button
+                className={`w-full text-left p-2 rounded transition-colors duration-200 ease-in-out hover:bg-gray-700 ${activeSection === section ? "bg-gray-600" : ""
+                  }`}
+                onClick={() => handleSectionChange(section)}
+              >
+                {label}
+              </button>
+            </li>
+          ))}
         </ul>
-      </div>
+      </aside>
 
       {/* Main Content */}
-      <div className="w-3/4 p-5 bg-gray-100 min-h-screen">
-        <header className="flex justify-between items-center py-6">
-          <p className="text-xl font-semibold">Admin Dashboard</p>
+      <main className="w-3/4 bg-gray-100 p-5">
+        <header className="mb-6">
+          <h1 className="text-xl font-semibold">Admin Dashboard</h1>
         </header>
 
-        <main className="flex flex-col space-y-14">
-          {/* Dashboard Content */}
-
-          {activeSection === 'users' && (
+        <section className="space-y-10">
+          {activeSection === "users" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Users</h2>
               <ManageUsers />
             </div>
           )}
 
-          {activeSection === 'doctors' && (
+          {activeSection === "doctors" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Doctors</h2>
               <ManageDoctors />
             </div>
           )}
 
-          {activeSection === 'medicalRecords' && (
+          {activeSection === "medicalRecords" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Medical Records</h2>
               <ManageMedicalRecords />
             </div>
           )}
 
-          {activeSection === 'finance' && (
+          {activeSection === "finance" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Finance Management</h2>
               <FinanceManagement />
             </div>
           )}
 
-          {activeSection === 'reporting' && (
+          {activeSection === "reporting" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Reporting & Analytics</h2>
               <ReportingAnalytics />
             </div>
           )}
 
-          {activeSection === 'settings' && (
+          {activeSection === "settings" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">System Settings</h2>
               <SystemSettings />
             </div>
           )}
-        </main>
-      </div>
+        </section>
+      </main>
     </div>
   );
 };

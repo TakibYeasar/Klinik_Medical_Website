@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link'; // Import the Next.js Link component for navigation
+import Link from 'next/link';
 
 const ChangePassword = () => {
     return (
@@ -9,35 +9,41 @@ const ChangePassword = () => {
 
                 <form className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
                         <input
+                            id="currentPassword"
                             type="password"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter current password"
+                            required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                         <input
+                            id="newPassword"
                             type="password"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Enter new password"
+                            required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
                         <input
+                            id="confirmPassword"
                             type="password"
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
                             placeholder="Confirm new password"
+                            required
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full bg-primary text-white py-3 rounded-md font-medium hover:bg-secondary transition duration-300"
+                        className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition duration-300"
                     >
                         Change Password
                     </button>
@@ -45,10 +51,8 @@ const ChangePassword = () => {
 
                 <div className="text-center mt-6">
                     {/* Use Link for Next.js navigation */}
-                    <Link href="/profile" passHref>
-                        <a className="text-sm text-primary hover:text-secondary transition duration-300">
+                    <Link href="/profile" className="text-sm text-primary hover:text-secondary transition duration-300">
                             Back to Profile
-                        </a>
                     </Link>
                 </div>
             </div>

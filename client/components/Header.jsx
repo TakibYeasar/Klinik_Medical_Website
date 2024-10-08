@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';  // Import Link for client-side navigation
+import Link from 'next/link';
 import axiosInstance from '../axios';
 import {
   FaArrowRight,
@@ -12,20 +12,12 @@ import {
   FaLinkedin,
   FaMapMarker,
   FaPhone,
-  FaTimes,
   FaTwitter
 } from "react-icons/fa";
-import dynamic from 'next/dynamic';
-
-// Dynamically import SignIn and SignUp to prevent SSR issues
-const Signin = dynamic(() => import('./auth/SignIn'));
-const SignUp = dynamic(() => import('./auth/SignUp'));
 
 const Header = ({ user }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [info, setInfo] = useState([]);
-  const [showSignIn, setShowSignIn] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
 
   useEffect(() => {
     const fetchContactInfo = async () => {
@@ -41,16 +33,10 @@ const Header = ({ user }) => {
 
     fetchContactInfo();
 
-    const handleBodyScroll = () => {
-      document.body.style.overflow = showSignIn || showSignUp ? 'hidden' : 'auto';
-    };
-
-    handleBodyScroll();
-
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [showSignIn, showSignUp]);
+  }, []); // Added empty dependency array to prevent infinite calls
 
   if (isLoading) {
     return <h3>Loading ...</h3>;
@@ -115,7 +101,7 @@ const Header = ({ user }) => {
         <div className="flex items-center">
           {['/', '/about', '/doctors'].map((path, index) => (
             <Link key={index} href={path} className="mt-2 mb-2 mx-4 text-font-color text-base font-medium uppercase">
-              {path === '/' ? 'Home' : path.substring(1).charAt(0).toUpperCase() + path.substring(2)}
+              {path === '/' ? 'Home' : path.slice(1)}
             </Link>
           ))}
           {user ? (
@@ -142,31 +128,12 @@ const Header = ({ user }) => {
             </>
           ) : (
             <>
-              <button onClick={() => setShowSignIn(true)} className="mt-2 mb-2 mx-4 text-font-color text-base font-medium uppercase">Sign In</button>
-              <button onClick={() => setShowSignUp(true)} className="mt-2 mb-2 mx-4 text-font-color text-base font-medium uppercase">Sign Up</button>
+              <Link href="/signin" className="mt-2 mb-2 mx-4 text-font-color text-base font-medium uppercase">Sign In</Link>
+              <Link href="/signup" className="mt-2 mb-2 mx-4 text-font-color text-base font-medium uppercase">Sign Up</Link>
             </>
           )}
         </div>
       </nav>
-
-      {/* Modal Components */}
-      {(showSignIn || showSignUp) && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-            {/* Conditionally render the SignIn or SignUp component */}
-            {showSignIn ? <Signin /> : <SignUp />}
-
-            {/* Close Button */}
-            <button
-              onClick={() => { setShowSignIn(false); setShowSignUp(false); }}
-              className="absolute top-4 right-4 text-gray-700 hover:text-gray-900"
-            >
-              <FaTimes />
-            </button>
-          </div>
-        </div>
-
-      )}
     </div>
   );
 };
