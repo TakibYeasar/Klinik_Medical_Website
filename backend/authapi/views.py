@@ -27,7 +27,9 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
-        send_generated_otp_to_email(user_data['email'], request)
+        
+        send_generated_otp_to_email(request, user_data['email'])
+
         return Response({
             'data': user_data,
             'message': 'Thanks for signing up! A passcode has been sent to verify your email.'

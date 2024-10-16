@@ -45,7 +45,7 @@ const Doctors = () => {
             contact: "emily.davis@hospital.com",
         },
         {
-            id: 1,
+            id: 4,
             name: "Dr. Jane Smith",
             image: "/path/to/image1.jpg",
             dept: "Cardiologist",
@@ -55,7 +55,7 @@ const Doctors = () => {
             contact: "jane.smith@hospital.com",
         },
         {
-            id: 2,
+            id: 5,
             name: "Dr. John Doe",
             image: "/path/to/image2.jpg",
             dept: "Neurologist",
@@ -65,7 +65,7 @@ const Doctors = () => {
             contact: "john.doe@hospital.com",
         },
         {
-            id: 3,
+            id: 6,
             name: "Dr. Emily Davis",
             image: "/path/to/image3.jpg",
             dept: "Dermatologist",

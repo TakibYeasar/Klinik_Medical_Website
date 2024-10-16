@@ -1,25 +1,41 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { verifyEmail } from '../../../../redux/features/auth/authApi'; // Adjust the path as per your file structure
 
-const EmailVerification = ({ onClose }) => {
-    const [otp, setOtp] = useState('');
-    const [message, setMessage] = useState('');
+const EmailVerification = () => {
+    const [otp, setOtp] = useState(''); // State for storing OTP input
+    const dispatch = useDispatch(); // Initialize dispatch for Redux
+    const router = useRouter(); // Initialize useRouter
+    const { loading, error } = useSelector((state) => state.auth); // Access loading and error from the auth slice
+    const [message, setMessage] = useState(''); // State for messages
 
     const handleOtpChange = (e) => {
-        setOtp(e.target.value);
+        setOtp(e.target.value); // Update OTP state on change
     };
 
     const handleVerify = (e) => {
-        e.preventDefault();
-        // Implement the OTP verification logic here
-        if (otp === '123456') { // Example OTP check
-            setMessage('Email verified successfully!');
-            // Add logic to redirect or close modal
-            setTimeout(onClose, 2000); // Close after 2 seconds
-        } else {
-            setMessage('Invalid OTP. Please try again.');
-        }
+        e.preventDefault(); // Prevent default form submission
+
+        // Dispatch the verifyEmail action and handle the success/failure
+        dispatch(verifyEmail(otp))
+            .unwrap() // Unwrap to handle the response directly
+            .then((response) => {
+                setMessage(response.message); // Set success message from response
+                setTimeout(handleClose, 2000); // Close modal after 2 seconds
+            })
+            .catch((err) => {
+                // Handle error messages based on backend response
+                const errorMessage = err.response?.data?.message || 'Invalid OTP. Please try again.';
+                setMessage(errorMessage); // Set error message
+            });
+    };
+
+    const handleClose = () => {
+        // Close the pop-up and redirect to the homepage
+        router.push('/'); // Redirect to homepage
     };
 
     return (
@@ -44,14 +60,16 @@ const EmailVerification = ({ onClose }) => {
                     <button
                         type="submit"
                         className="mt-4 w-full bg-primary text-white py-2 rounded-md hover:bg-secondary transition duration-300"
+                        disabled={loading} // Disable button while loading
                     >
-                        Verify
+                        {loading ? 'Verifying...' : 'Verify'} {/* Change button text based on loading state */}
                     </button>
 
                     {message && <p className={`mt-2 text-sm ${message.includes('Invalid') ? 'text-red-500' : 'text-green-500'}`}>{message}</p>}
+                    {error && <p className="mt-2 text-sm text-red-500">{error.message}</p>} {/* Display error from Redux state */}
                 </form>
 
-                <button onClick={onClose} className="mt-4 text-gray-600 hover:text-gray-800">
+                <button onClick={handleClose} className="mt-4 text-gray-600 hover:text-gray-800">
                     Cancel
                 </button>
             </div>

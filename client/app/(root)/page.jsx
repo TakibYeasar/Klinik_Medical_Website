@@ -1,5 +1,4 @@
-import { Aboutus, Banner, Doctors, Feature, Service, PatientOnboarding, Testimonial } from '../../components'
-import Image from 'next/image'
+import { Aboutus, Banner, Doctors, Feature, Service, PatientOnboarding, Testimonial } from '../../components';
 
 export default function Home() {
   return (

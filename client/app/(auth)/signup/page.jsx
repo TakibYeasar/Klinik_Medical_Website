@@ -3,23 +3,65 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { registerUser } from '../../../redux/features/auth/authApi';
 
-const SignUp = ({ onClose }) => {
+const SignUp = () => {
+    const dispatch = useDispatch();
+    const router = useRouter(); // Initialize useRouter
+    const { loading, error } = useSelector((state) => state.auth);
+    const [formData, setFormData] = useState({
+        email: '',
+        username: '',
+        first_name: '',
+        last_name: '',
+        password: '',
+        confirm_password: '',
+    });
+
     const [selectedRole, setSelectedRole] = useState('patient');
 
-    const handleSignUpSubmit = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        // Handle sign-up logic here
+        if (formData.password === formData.confirm_password) {
+            const result = await dispatch(registerUser({ ...formData, role: selectedRole }));
+
+            if (result?.payload?.success) {
+                // Redirect to the /verifyemail page upon successful signup and pass message in query parameters
+                const message = encodeURIComponent(result.payload.message);
+                router.push(`/verifyemail?message=${message}`);
+            } else {
+                alert('Sign up failed! Please try again.');
+            }
+        } else {
+            alert("Passwords do not match!");
+        }
+    };
+
+    const handleClose = () => {
+        // Close the pop-up and redirect to the homepage
+        router.push('/');
     };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-8 relative bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-y-auto max-h-[80vh]" style={{ paddingTop: '10vh', paddingBottom: '10vh' }}>
-                <button onClick={onClose} className="absolute top-2 right-4 text-gray-500 hover:text-gray-700">
+                <button onClick={handleClose} className="absolute top-2 right-4 text-gray-500 hover:text-gray-700">
                     &#x2715; {/* Close button */}
                 </button>
 
                 <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Account</h2>
+
+                {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
 
                 {/* Role Selection Section */}
                 <div className="mb-6">
@@ -52,7 +94,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="email"
+                            name="email"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Enter your email"
                         />
@@ -64,7 +108,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="text"
+                            name="username"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Choose a username"
                         />
@@ -76,7 +122,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="text"
+                            name="first_name"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Enter your first name"
                         />
@@ -88,7 +136,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="text"
+                            name="last_name"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Enter your last name"
                         />
@@ -100,7 +150,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="password"
+                            name="password"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Enter your password"
                         />
@@ -112,7 +164,9 @@ const SignUp = ({ onClose }) => {
                         </label>
                         <input
                             type="password"
+                            name="confirm_password"
                             required
+                            onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
                             placeholder="Confirm your password"
                         />
@@ -120,35 +174,12 @@ const SignUp = ({ onClose }) => {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-3 rounded-md shadow-lg font-medium hover:bg-blue-700 transition duration-300"
+                        className={`w-full bg-blue-600 text-white py-3 rounded-md shadow-lg font-medium hover:bg-blue-700 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={loading}
                     >
                         Sign Up
                     </button>
                 </form>
-
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-gray-600 mb-4">Or sign up using</p>
-                    <div className="flex justify-center space-x-4">
-                        <a href="#" className="text-blue-600 hover:text-blue-800 transition duration-300">
-                            <FaFacebook size={24} />
-                        </a>
-                        <a href="#" className="text-red-500 hover:text-red-700 transition duration-300">
-                            <FaGoogle size={24} />
-                        </a>
-                        <a href="#" className="text-blue-400 hover:text-blue-600 transition duration-300">
-                            <FaTwitter size={24} />
-                        </a>
-                    </div>
-                </div>
-
-                <div className="text-center mt-6">
-                    <p className="text-sm text-gray-600">
-                        Already have an account?
-                        <Link href="/signin" className="text-blue-600 font-medium ml-1 hover:text-blue-800 transition duration-300">
-                            Sign in
-                        </Link>
-                    </p>
-                </div>
             </div>
         </div>
     );

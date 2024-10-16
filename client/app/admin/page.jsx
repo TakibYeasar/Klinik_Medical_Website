@@ -20,7 +20,7 @@ const fetchAppointments = async () => {
 };
 
 const AdminDashboard = () => {
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState("reporting");
   const [appointments, setAppointments] = useState({
     scheduledCount: 0,
     pendingCount: 0,
@@ -52,7 +52,6 @@ const AdminDashboard = () => {
             { label: "Manage Doctors", section: "doctors" },
             { label: "Medical Records", section: "medicalRecords" },
             { label: "Finance Management", section: "finance" },
-            { label: "Reporting & Analytics", section: "reporting" },
             { label: "System Settings", section: "settings" },
           ].map(({ label, section }) => (
             <li key={section}>
@@ -75,6 +74,13 @@ const AdminDashboard = () => {
         </header>
 
         <section className="space-y-10">
+
+          {activeSection === "reporting" && (
+            <div>
+              <ReportingAnalytics />
+            </div>
+          )}
+
           {activeSection === "users" && (
             <div>
               <h2 className="text-2xl font-bold mb-3">Manage Users</h2>
@@ -100,13 +106,6 @@ const AdminDashboard = () => {
             <div>
               <h2 className="text-2xl font-bold mb-3">Finance Management</h2>
               <FinanceManagement />
-            </div>
-          )}
-
-          {activeSection === "reporting" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Reporting & Analytics</h2>
-              <ReportingAnalytics />
             </div>
           )}
 

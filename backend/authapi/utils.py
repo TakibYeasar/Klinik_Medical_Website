@@ -1,6 +1,5 @@
 from django.core.exceptions import PermissionDenied
 from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
@@ -9,61 +8,73 @@ from django.conf import settings
 import random
 from .models import CustomUser, OneTimePassword
 
-def send_email(request, mail_subject, email_template, user):
-    """Send email"""
+
+def send_email(request, mail_subject, user):
+    """Send a plain text email with a token for the user."""
     from_email = settings.EMAIL_HOST_USER
     current_site = get_current_site(request)
-    message = render_to_string(email_template, {
-        'user': user,
-        'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': default_token_generator.make_token(user),
-    })
+
+    # Generate the token and uid
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+
+    # Construct the email content
+    message = (
+        f"Hi {user.first_name},\n\n"
+        f"Please click the link below to verify your email:\n"
+        f"http://{current_site.domain}/verify-email/{uid}/{token}/\n\n"
+        f"Thank you!"
+    )
+
+    # Send the email
     to_email = user.email
     mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
-    mail.content_subtype = 'html'
     mail.send()
-    print(f'Subject: {mail_subject}\nFrom: {
-          from_email}\nTo: {to_email}\n{message}')
+
+    print(f"Subject: {mail_subject}\nFrom: {
+          from_email}\nTo: {to_email}\n{message}")
 
 
 def send_generated_otp_to_email(request, email):
-    """Send OTP for email verification"""
+    """Generate and send an OTP for email verification."""
     from_email = settings.EMAIL_HOST_USER
     current_site = get_current_site(request)
-    user = CustomUser.objects.get(email=email)
+
+    # Retrieve the user by email
+    try:
+        user = CustomUser.objects.get(email=email)
+    except CustomUser.DoesNotExist:
+        raise PermissionDenied("User with this email does not exist.")
 
     # Generate OTP and save to the database
     otp = random.randint(1000, 9999)
     OneTimePassword.objects.create(user=user, otp=otp)
 
-    # Render email body using a template
-    email_body = render_to_string('email/otp_verification.html', {
-        'user': user,
-        'domain': current_site.domain,
-        'otp': otp,
-    })
+    # Construct the plain text email content
+    message = (
+        f"Hi {user.first_name},\n\n"
+        f"Your One-Time Password (OTP) for email verification is: {otp}\n\n"
+        f"Please enter this OTP on the verification page to verify your email.\n"
+        f"Thank you!\n"
+    )
 
-    # Prepare and send the email
+    # Send the OTP email
     mail_subject = "One-Time Passcode for Email Verification"
-    mail = EmailMessage(mail_subject, email_body, from_email, to=[user.email])
-    mail.content_subtype = 'html'
+    mail = EmailMessage(mail_subject, message, from_email, to=[user.email])
     mail.send()
 
-    print(f'Subject: {mail_subject}\nFrom: {
-          from_email}\nTo: {user.email}\n{email_body}')
+    print(f"Subject: {mail_subject}\nFrom: {
+          from_email}\nTo: {user.email}\n{message}")
 
 
-def send_notification_email(mail_subject, mail_template, context):
-    """Send notification email"""
+def send_notification_email(mail_subject, message_content, recipient_email):
+    """Send notification emails to users."""
     from_email = settings.EMAIL_HOST_USER
-    message = render_to_string(mail_template, context)
-    if isinstance(context['to_email'], str):
-        to_email = [context['to_email']]
-    else:
-        to_email = context['to_email']
-    mail = EmailMessage(mail_subject, message, from_email, to=to_email)
-    mail.content_subtype = 'html'
+
+    # Send the email
+    mail = EmailMessage(mail_subject, message_content,
+                        from_email, to=[recipient_email])
     mail.send()
-    print(f'Subject: {mail_subject}\nFrom: {
-          from_email}\nTo: {to_email}\n{message}')
+
+    print(f"Subject: {mail_subject}\nFrom: {from_email}\nTo: {
+          recipient_email}\n{message_content}")

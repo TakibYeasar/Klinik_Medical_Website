@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import *
 
-
 class ContactinfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contactinfo
