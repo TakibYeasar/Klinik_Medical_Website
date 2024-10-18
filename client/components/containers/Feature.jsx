@@ -1,7 +1,6 @@
 "use client";
 
 import axios from 'axios';
-import axiosInstance from '../../axios';
 import { useEffect, useState } from 'react';
 import { FaCheck, FaCommentMedical, FaHeadphones, FaUser } from "react-icons/fa";
 

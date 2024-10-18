@@ -13,12 +13,25 @@ const handleApiError = (error) => {
 
 // Thunks
 
+// Fetch current user
+export const fetchCurrentUser = createAsyncThunk(
+    'auth/fetchCurrentUser',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`${API_URL}/current-user/`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleApiError(error));
+        }
+    }
+);
+
 // Register user
 export const registerUser = createAsyncThunk(
     'auth/registerUser',
-    async (userData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/api/auth/register/`, userData);
+            const response = await axios.post(`${API_URL}/api/auth/register/`, formData);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));
@@ -45,6 +58,9 @@ export const loginUser = createAsyncThunk(
     async (credentials, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/api/auth/login/`, credentials);
+            // Store tokens in local storage
+            localStorage.setItem('accessToken', response.data.access);
+            localStorage.setItem('refreshToken', response.data.refresh);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));
@@ -58,6 +74,9 @@ export const logoutUser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             await axios.post(`${API_URL}/api/auth/logout/`);
+            // Clear tokens from local storage
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             return true;
         } catch (error) {
             return rejectWithValue(handleApiError(error));
@@ -112,6 +131,8 @@ export const refreshToken = createAsyncThunk(
     async (token, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/api/auth/token/refresh/`, { refresh: token });
+            // Update access token in local storage
+            localStorage.setItem('accessToken', response.data.access);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));

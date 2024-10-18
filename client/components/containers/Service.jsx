@@ -1,7 +1,6 @@
 "use client";
 
 import axios from 'axios';
-import axiosInstance from '../../axios';
 import { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
@@ -12,7 +11,7 @@ const Service = () => {
 
     useEffect(() => {
         axios.all([
-            axiosInstance.get('/api/core/service/'),
+            axios.get('http://127.0.0.1:8000/api/core/service/'),
         ]).then(axios.spread((res) => {
             setServicedata(res.data)
             setIsLoading(false)

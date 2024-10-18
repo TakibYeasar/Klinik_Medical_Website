@@ -1,15 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { useRouter } from 'next/navigation';
 import { registerUser } from '../../../redux/features/auth/authApi';
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const router = useRouter(); // Initialize useRouter
+    const router = useRouter();
     const { loading, error } = useSelector((state) => state.auth);
     const [formData, setFormData] = useState({
         email: '',
@@ -19,7 +18,6 @@ const SignUp = () => {
         password: '',
         confirm_password: '',
     });
-
     const [selectedRole, setSelectedRole] = useState('patient');
 
     const handleChange = (e) => {
@@ -32,154 +30,114 @@ const SignUp = () => {
 
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        if (formData.password === formData.confirm_password) {
-            const result = await dispatch(registerUser({ ...formData, role: selectedRole }));
+        if (formData.password !== formData.confirm_password) {
+            alert('Passwords do not match!');
+            return;
+        }
 
-            if (result?.payload?.success) {
-                // Redirect to the /verifyemail page upon successful signup and pass message in query parameters
-                const message = encodeURIComponent(result.payload.message);
-                router.push(`/verifyemail?message=${message}`);
-            } else {
-                alert('Sign up failed! Please try again.');
-            }
+        const result = await dispatch(registerUser({ ...formData, role: selectedRole }));
+        if (result?.payload?.message) {
+            router.push(`/signup/verifyemail`);
         } else {
-            alert("Passwords do not match!");
+            alert('Sign up failed! Please try again.');
         }
     };
 
     const handleClose = () => {
-        // Close the pop-up and redirect to the homepage
         router.push('/');
     };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-8 relative bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-y-auto max-h-[80vh]" style={{ paddingTop: '10vh', paddingBottom: '10vh' }}>
-                <button onClick={handleClose} className="absolute top-2 right-4 text-gray-500 hover:text-gray-700">
-                    &#x2715; {/* Close button */}
+            <div className="relative w-full max-w-lg bg-white shadow-lg rounded-lg p-8 max-h-[80vh] overflow-y-auto">
+                {/* Close button */}
+                <button onClick={handleClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    &#x2715;
                 </button>
 
-                <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Account</h2>
+                {/* Form title */}
+                <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Create a New Account</h2>
 
-                {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
+                {/* Error message */}
+                {error && <div className="mb-4 text-center text-red-500">{error.message || 'An error occurred'}</div>}
 
-                {/* Role Selection Section */}
+                {/* Role selection */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Select Your Role <span className="text-red-500">*</span>
-                    </label>
-                    <div className="flex space-x-4">
-                        <button
-                            type="button"
-                            onClick={() => setSelectedRole('patient')}
-                            className={`flex-1 p-4 border rounded-md text-center ${selectedRole === 'patient' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border-gray-300'}`}
-                        >
-                            Patient
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setSelectedRole('doctor')}
-                            className={`flex-1 p-4 border rounded-md text-center ${selectedRole === 'doctor' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border-gray-300'}`}
-                        >
-                            Doctor
-                        </button>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Your Role <span className="text-red-500">*</span></label>
+                    <div className="flex justify-center space-x-4">
+                        {['patient', 'doctor'].map((role) => (
+                            <button
+                                key={role}
+                                type="button"
+                                onClick={() => setSelectedRole(role)}
+                                className={`px-4 py-2 text-center w-1/2 border rounded-md focus:outline-none ${selectedRole === role ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border-gray-300'} transition duration-300 ease-in-out`}
+                            >
+                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* Form Section */}
-                <form className="space-y-6" onSubmit={handleSignUpSubmit} role="form">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Enter your email"
-                        />
-                    </div>
+                {/* Signup form */}
+                <form className="space-y-6" onSubmit={handleSignUpSubmit}>
+                    {/* Input fields */}
+                    {['email', 'username', 'first_name', 'last_name'].map((field) => (
+                        <div key={field}>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {field.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())} <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type={field === 'email' ? 'email' : 'text'}
+                                name={field}
+                                required
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                                placeholder={`Enter your ${field}`}
+                            />
+                        </div>
+                    ))}
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Username <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="username"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Choose a username"
-                        />
-                    </div>
+                    {/* Password and Confirm Password */}
+                    {['password', 'confirm_password'].map((field) => (
+                        <div key={field}>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {field.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())} <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="password"
+                                name={field}
+                                required
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                                placeholder={field === 'password' ? 'Enter your password' : 'Confirm your password'}
+                            />
+                        </div>
+                    ))}
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            First Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="first_name"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Enter your first name"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Last Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="last_name"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Enter your last name"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Password <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Enter your password"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Confirm Password <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="password"
-                            name="confirm_password"
-                            required
-                            onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                            placeholder="Confirm your password"
-                        />
-                    </div>
-
+                    {/* Submit button */}
                     <button
                         type="submit"
-                        className={`w-full bg-blue-600 text-white py-3 rounded-md shadow-lg font-medium hover:bg-blue-700 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={loading}
+                        className="w-full py-4 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition duration-300"
                     >
-                        Sign Up
+                        {loading ? 'Signing Up...' : 'Sign Up'}
                     </button>
                 </form>
+
+                {/* Social media buttons */}
+                <div className="mt-8">
+                    <p className="text-center text-gray-500 mb-4">Or sign up with</p>
+                    <div className="flex justify-center space-x-4">
+                        <button className="text-blue-600 hover:text-blue-800 transition duration-300">
+                            <FaFacebook size={24} />
+                        </button>
+                        <button className="text-red-600 hover:text-red-800 transition duration-300">
+                            <FaGoogle size={24} />
+                        </button>
+                        <button className="text-blue-400 hover:text-blue-600 transition duration-300">
+                            <FaTwitter size={24} />
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

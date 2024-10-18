@@ -1,7 +1,6 @@
 "use client";
-
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../axios';
 import { useRouter } from 'next/router';
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
@@ -13,7 +12,7 @@ const RelatedDoctors = ({ docId, speciality }) => {
   useEffect(() => {
     const fetchRelatedDoctors = async () => {
       try {
-        const response = await axiosInstance.get('/api/core/doctor/');
+        const response = await axios.get('http://127.0.0.1:8000/api/core/doctor/');
         const filteredDoctors = response.data.filter(doc => doc.speciality === speciality && doc._id !== docId);
         setRelDocs(filteredDoctors);
         setIsLoading(false);

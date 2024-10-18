@@ -1,6 +1,5 @@
 "use client";
-
-import axiosInstance from '../../axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
@@ -11,7 +10,7 @@ const Testimonial = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-        axiosInstance.get('/api/core/testimonials/')
+        axios.get('http://127.0.0.1:8000/api/core/testimonials/')
             .then(res => {
                 setTestdata(res.data);
                 setIsLoading(false);

@@ -1,7 +1,6 @@
 'use client';
 
 import axios from 'axios';
-import axiosInstance from '../axios';
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaFacebook, FaLinkedin, FaMapMarker, FaPhone, FaTwitter, FaYoutube } from "react-icons/fa";
 
@@ -12,7 +11,7 @@ const Footer = () => {
 
   useEffect(() => {
     axios.all([
-      axiosInstance.get('/api/core/contactinfo/'),
+      axios.get('http://127.0.0.1:8000/api/core/contactinfo/'),
     ]).then(axios.spread((res) => {
       setInfo(res.data)
       setIsLoading(false)

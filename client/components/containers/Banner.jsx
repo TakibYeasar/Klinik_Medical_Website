@@ -1,6 +1,5 @@
 "use client";
-
-import axiosInstance from "../../axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -13,8 +12,7 @@ const Banner = () => {
     const [patientCount, setPatientCount] = useState(0);
 
     useEffect(() => {
-        axiosInstance
-            .get("/api/core/banner/")
+        axios.get("http://127.0.0.1:8000/api/core/banner/")
             .then((res) => {
                 setBanners(res.data);
                 setIsLoading(false);

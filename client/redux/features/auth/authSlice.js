@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+    fetchCurrentUser,
     registerUser,
     verifyEmail,
     loginUser,
@@ -13,9 +14,9 @@ import {
 // Initial state for the auth slice
 const initialState = {
     user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
+    accessToken: localStorage.getItem('accessToken') || null,
+    refreshToken: localStorage.getItem('refreshToken') || null,
+    isAuthenticated: !!localStorage.getItem('accessToken'), // Set to true if token exists
     loading: false,
     error: null,
 };
@@ -30,6 +31,21 @@ const authSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        // Fetch current user
+        builder
+            .addCase(fetchCurrentUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchCurrentUser.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.user = payload; // Set user data from the response
+                state.isAuthenticated = true; // Assume user is authenticated after fetching
+            })
+            .addCase(fetchCurrentUser.rejected, (state, { payload }) => {
+                state.loading = false;
+                state.error = payload;
+            });
         // Register user
         builder
             .addCase(registerUser.pending, (state) => {
@@ -146,7 +162,7 @@ const authSlice = createSlice({
             })
             .addCase(refreshToken.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.accessToken = payload.access;
+                state.accessToken = payload.access; // Update access token
             })
             .addCase(refreshToken.rejected, (state, { payload }) => {
                 state.loading = false;

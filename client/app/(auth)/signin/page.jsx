@@ -18,12 +18,12 @@ const Signin = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            toast.success('Login successful!');
-            router.push('/'); // Redirect to homepage when logged in
+            toast.success('Login successful!'); // Display success toast
+            router.push('/'); // Redirect to homepage on successful login
         }
 
         if (error) {
-            toast.error(error.message || 'Login failed!');
+            toast.error(error.message || 'Login failed!'); // Show error message
         }
 
         return () => {
@@ -43,8 +43,11 @@ const Signin = () => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8 relative">
-                <button onClick={handleClose} className="absolute top-2 right-4 text-gray-500 hover:text-gray-700">
+            <div className="relative w-full max-w-md bg-white shadow-lg rounded-lg p-8">
+                <button
+                    onClick={handleClose}
+                    className="absolute top-2 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                >
                     &#x2715; {/* Close button */}
                 </button>
                 <h2 className="text-4xl font-bold text-blue-800 mb-6 text-center">Welcome to Klinik</h2>
@@ -80,10 +83,16 @@ const Signin = () => {
 
                     <div className="flex justify-between items-center mb-6">
                         <label className="inline-flex items-center text-gray-700">
-                            <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-500 transition duration-300" />
+                            <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-blue-500 transition duration-300"
+                            />
                             <span className="ml-2 text-sm">Remember me</span>
                         </label>
-                        <Link href="/forgotpass" className="text-sm text-blue-600 hover:text-blue-800 transition duration-300">
+                        <Link
+                            href="/forgotpass"
+                            className="text-sm text-blue-600 hover:text-blue-800 transition duration-300"
+                        >
                             Forgot your password?
                         </Link>
                     </div>
@@ -99,7 +108,7 @@ const Signin = () => {
 
                 <div className="text-center mt-6">
                     <p className="text-sm text-gray-600">
-                        Don't have an account?
+                        Don&apos;t have an account?
                         <Link href="/signup" className="text-blue-600 font-medium ml-1 hover:text-blue-800 transition duration-300">
                             Sign up
                         </Link>
