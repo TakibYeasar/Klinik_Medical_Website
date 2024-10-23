@@ -1,44 +1,54 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Footer, Header } from '../components';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { cn } from '../lib/utils';
 import { Provider } from 'react-redux';
 import { store } from '../redux/store/store';
+import { fetchCurrentUser } from '../redux/features/auth/authApi';
 
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function RootLayout({ children }) {
-  const [user, setUser] = useState(null);
+function Layout({ children }) {
+  const dispatch = useDispatch();
+  const { user, loading, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get('/api/auth/current_user/', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch]);
 
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     console.log('Authenticated user:', user);
+  //   }
+  // }, [user, isAuthenticated]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
+    <div className={cn('min-h-screen font-sans antialiased', inter.className)}>
+      {/* Pass user and isAuthenticated props to Header */}
+      <Header user={user} isAuthenticated={isAuthenticated} />
+      <main>{children}</main>
+      <Footer />
+    </div>
+  );
+}
+
+export default function RootLayout({ children }) {
+  return (
     <html lang="en">
-      <body className={cn('min-h-screen font-sans antialiased', inter.className)}>
+      <body>
         <Provider store={store}>
-          <Header user={user} />
-          <main>{children}</main>
-          <Footer />
+          <Layout>{children}</Layout>
         </Provider>
       </body>
     </html>

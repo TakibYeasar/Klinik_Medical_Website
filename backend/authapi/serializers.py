@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = "__all__"
+        fields = ('id', 'email', 'first_name', 'last_name', 'role')
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

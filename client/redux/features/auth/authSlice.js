@@ -8,15 +8,15 @@ import {
     passwordReset,
     passwordResetConfirm,
     setNewPassword,
-    refreshToken
+    refreshToken,
 } from './authApi';
 
 // Initial state for the auth slice
 const initialState = {
     user: null,
-    accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
-    isAuthenticated: !!localStorage.getItem('accessToken'), // Set to true if token exists
+    accessToken: null,
+    refreshToken: null,
+    isAuthenticated: false,
     loading: false,
     error: null,
 };
@@ -29,25 +29,35 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        setTokens: (state, action) => {
+            const { accessToken, refreshToken } = action.payload;
+            state.accessToken = accessToken;
+            state.refreshToken = refreshToken;
+            state.isAuthenticated = true; // Set authenticated to true when tokens are available
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
+            state.isAuthenticated = true; // Set authenticated to true when user is set
+        },
     },
     extraReducers: (builder) => {
-        // Fetch current user
         builder
+            // Fetch current user
             .addCase(fetchCurrentUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchCurrentUser.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.user = payload; // Set user data from the response
-                state.isAuthenticated = true; // Assume user is authenticated after fetching
+                state.user = payload;
+                state.isAuthenticated = true; // User authenticated after fetching
             })
             .addCase(fetchCurrentUser.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
-        // Register user
-        builder
+            })
+
+            // Register user
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -55,47 +65,45 @@ const authSlice = createSlice({
             .addCase(registerUser.fulfilled, (state, { payload }) => {
                 state.loading = false;
                 state.user = payload.user;
-                state.isAuthenticated = true;
+                state.isAuthenticated = true; // Authenticated after registration
             })
             .addCase(registerUser.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Verify email
-        builder
+            // Verify email
             .addCase(verifyEmail.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(verifyEmail.fulfilled, (state) => {
-                state.loading = false;
+                state.loading = false; // No additional state change needed after successful verification
             })
             .addCase(verifyEmail.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Login user
-        builder
+            // Login user
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.user = payload.user;
-                state.accessToken = payload.access;
-                state.refreshToken = payload.refresh;
-                state.isAuthenticated = true;
+                state.user = { email: payload.email }; // Store user email or other info here
+                state.accessToken = payload.access_token;
+                state.refreshToken = payload.refresh_token;
+                state.isAuthenticated = true; // Authenticated after login
             })
+
             .addCase(loginUser.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Logout user
-        builder
+            // Logout user
             .addCase(logoutUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -105,64 +113,60 @@ const authSlice = createSlice({
                 state.user = null;
                 state.accessToken = null;
                 state.refreshToken = null;
-                state.isAuthenticated = false;
+                state.isAuthenticated = false; // User is logged out
             })
             .addCase(logoutUser.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Password reset request
-        builder
+            // Password reset request
             .addCase(passwordReset.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(passwordReset.fulfilled, (state) => {
-                state.loading = false;
+                state.loading = false; // No state change after password reset request
             })
             .addCase(passwordReset.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Password reset confirm
-        builder
+            // Password reset confirmation
             .addCase(passwordResetConfirm.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(passwordResetConfirm.fulfilled, (state) => {
-                state.loading = false;
+                state.loading = false; // No additional state change needed after confirmation
             })
             .addCase(passwordResetConfirm.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Set new password
-        builder
+            // Set new password
             .addCase(setNewPassword.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(setNewPassword.fulfilled, (state) => {
-                state.loading = false;
+                state.loading = false; // No additional state change needed after setting new password
             })
             .addCase(setNewPassword.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
 
-        // Refresh token
-        builder
+            // Refresh token
             .addCase(refreshToken.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(refreshToken.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.accessToken = payload.access; // Update access token
+                state.accessToken = payload.access; // Update the access token
             })
             .addCase(refreshToken.rejected, (state, { payload }) => {
                 state.loading = false;
@@ -171,5 +175,6 @@ const authSlice = createSlice({
     },
 });
 
-export const { resetAuthState } = authSlice.actions;
+// Export actions and reducer
+export const { resetAuthState, setTokens, setUser } = authSlice.actions;
 export default authSlice.reducer;

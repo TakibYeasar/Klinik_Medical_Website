@@ -15,6 +15,7 @@ export { default as PatientOnboarding } from "./containers/PatientOnboarding";
 export { default as Contact } from "./containers/Contact";
 export { default as Testimonial } from "./containers/Testimonial";
 export { default as Pagination } from "./containers/Pagination";
+export { default as ChangePassword } from "./containers/ChangePassword";
 
 
 // components - containers - admin

@@ -19,6 +19,21 @@ class CurrentUserView(APIView):
         return Response(serializer.data)
 
 
+# class UserDetailView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         email = request.query_params.get('email')
+#         if email:
+#             try:
+#                 user = CustomUser.objects.get(email=email)
+#                 serializer = UserSerializer(user)
+#                 return Response(serializer.data)
+#             except CustomUser.DoesNotExist:
+#                 return Response({"error": "User not found."}, status=404)
+#         return Response({"error": "Email parameter is required."}, status=400)
+
+
 class RegisterView(APIView):
     serializer_class = UserRegisterSerializer
 

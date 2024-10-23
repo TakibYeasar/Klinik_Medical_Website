@@ -18,7 +18,16 @@ export const fetchCurrentUser = createAsyncThunk(
     'auth/fetchCurrentUser',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/current-user/`);
+            const accessToken = localStorage.getItem('accessToken');
+            if (!accessToken) {
+                throw new Error('No access token found');
+            }
+
+            const response = await axios.get(`${API_URL}/api/auth/current-user/`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));
@@ -52,37 +61,60 @@ export const verifyEmail = createAsyncThunk(
     }
 );
 
-// Login user
+
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (credentials, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/api/auth/login/`, credentials);
-            // Store tokens in local storage
-            localStorage.setItem('accessToken', response.data.access);
-            localStorage.setItem('refreshToken', response.data.refresh);
-            return response.data;
+
+            const { email, access_token, refresh_token, role } = response.data;
+
+            // console.log('AccessToken:', access_token);
+            // console.log('RefreshToken:', refresh_token);
+            // console.log('User Email:', email);
+
+            // Store tokens and email (user) in localStorage
+            localStorage.setItem('accessToken', access_token);
+            localStorage.setItem('refreshToken', refresh_token);
+            localStorage.setItem('user', JSON.stringify({ email, role })); // Store the user email or any other info you want
+
+            return { access_token, refresh_token, email, role };
         } catch (error) {
             return rejectWithValue(handleApiError(error));
         }
     }
 );
 
+
 // Logout user
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
     async (_, { rejectWithValue }) => {
         try {
-            await axios.post(`${API_URL}/api/auth/logout/`);
-            // Clear tokens from local storage
+            // Attempt to log the user out on the server
+            const response = await axios.post(`${API_URL}/api/auth/logout/`);
+
+            // Clear tokens from local storage after successful server logout
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
-            return true;
+            localStorage.removeItem('user');
+
+            // Return success response or status
+            return response.data;  // or just return if no specific data is required
+
         } catch (error) {
+            // Ensure tokens are removed from local storage even if the API call fails
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+
+            // Return error handling to reject the thunk with appropriate error
             return rejectWithValue(handleApiError(error));
         }
     }
 );
+
 
 // Request password reset
 export const passwordReset = createAsyncThunk(
