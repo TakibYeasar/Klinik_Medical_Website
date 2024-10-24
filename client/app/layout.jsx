@@ -17,17 +17,12 @@ function Layout({ children }) {
   const { user, loading, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
+    // Check for the authToken object in localStorage
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    if (authToken && authToken.access_token) {
       dispatch(fetchCurrentUser());
     }
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     console.log('Authenticated user:', user);
-  //   }
-  // }, [user, isAuthenticated]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;

@@ -19,7 +19,8 @@ const EmailVerification = () => {
         try {
             const response = await dispatch(verifyEmail(otp)).unwrap();
             setMessage(response.message);
-            setTimeout(() => router.push('/'), 2000); // Redirect after success
+            // Redirect to /signin after successful verification
+            setTimeout(() => router.push('/signin'));
         } catch (err) {
             const errorMessage = err.response?.data?.message || 'Invalid OTP. Please try again.';
             setMessage(errorMessage);

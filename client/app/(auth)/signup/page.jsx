@@ -18,7 +18,7 @@ const SignUp = () => {
         password: '',
         confirm_password: '',
     });
-    const [selectedRole, setSelectedRole] = useState('patient');
+    const [selectedRole, setSelectedRole] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,14 +30,25 @@ const SignUp = () => {
 
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
+
+        // Check if passwords match
         if (formData.password !== formData.confirm_password) {
             alert('Passwords do not match!');
             return;
         }
 
-        const result = await dispatch(registerUser({ ...formData, role: selectedRole }));
+        // Add the selected role to the formData
+        const signUpData = {
+            ...formData,
+            role: selectedRole || 'patient', // Default to 'patient' if no role is selected
+        };
+
+        // Dispatch the registerUser action with the complete formData including role
+        const result = await dispatch(registerUser(signUpData));
+
+        // Handle success or failure
         if (result?.payload?.message) {
-            router.push(`/signup/verifyemail`);
+            router.push('/signup/verifyemail');
         } else {
             alert('Sign up failed! Please try again.');
         }
@@ -50,18 +61,14 @@ const SignUp = () => {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="relative w-full max-w-lg bg-white shadow-lg rounded-lg p-8 max-h-[80vh] overflow-y-auto">
-                {/* Close button */}
                 <button onClick={handleClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                     &#x2715;
                 </button>
 
-                {/* Form title */}
                 <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Create a New Account</h2>
 
-                {/* Error message */}
                 {error && <div className="mb-4 text-center text-red-500">{error.message || 'An error occurred'}</div>}
 
-                {/* Role selection */}
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Select Your Role <span className="text-red-500">*</span></label>
                     <div className="flex justify-center space-x-4">
@@ -78,9 +85,7 @@ const SignUp = () => {
                     </div>
                 </div>
 
-                {/* Signup form */}
                 <form className="space-y-6" onSubmit={handleSignUpSubmit}>
-                    {/* Input fields */}
                     {['email', 'username', 'first_name', 'last_name'].map((field) => (
                         <div key={field}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -97,7 +102,6 @@ const SignUp = () => {
                         </div>
                     ))}
 
-                    {/* Password and Confirm Password */}
                     {['password', 'confirm_password'].map((field) => (
                         <div key={field}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -114,7 +118,6 @@ const SignUp = () => {
                         </div>
                     ))}
 
-                    {/* Submit button */}
                     <button
                         type="submit"
                         className="w-full py-4 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition duration-300"
@@ -123,7 +126,6 @@ const SignUp = () => {
                     </button>
                 </form>
 
-                {/* Social media buttons */}
                 <div className="mt-8">
                     <p className="text-center text-gray-500 mb-4">Or sign up with</p>
                     <div className="flex justify-center space-x-4">

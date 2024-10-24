@@ -18,18 +18,30 @@ export const fetchCurrentUser = createAsyncThunk(
     'auth/fetchCurrentUser',
     async (_, { rejectWithValue }) => {
         try {
-            const accessToken = localStorage.getItem('accessToken');
-            if (!accessToken) {
+            // Retrieve the authToken object from localStorage
+            const authToken = JSON.parse(localStorage.getItem('authToken'));
+
+            if (!authToken || !authToken.access_token) {
                 throw new Error('No access token found');
             }
 
+            // Check if the access token is still valid
+            const currentTime = Date.now();
+            if (authToken.expirationTime && currentTime > authToken.expirationTime) {
+                throw new Error('Access token has expired');
+            }
+
+            // Make an authenticated request to fetch the current user
             const response = await axios.get(`${API_URL}/api/auth/current-user/`, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${authToken.access_token}`,
                 },
             });
+
+            // Return the user data on successful request
             return response.data;
         } catch (error) {
+            // Handle errors and reject with a meaningful message
             return rejectWithValue(handleApiError(error));
         }
     }
@@ -51,9 +63,9 @@ export const registerUser = createAsyncThunk(
 // Verify email
 export const verifyEmail = createAsyncThunk(
     'auth/verifyEmail',
-    async (emailToken, { rejectWithValue }) => {
+    async (otp, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/api/auth/verify-email/`, { token: emailToken });
+            const response = await axios.post(`${API_URL}/api/auth/verify-email/`, { otp });
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));
@@ -62,30 +74,37 @@ export const verifyEmail = createAsyncThunk(
 );
 
 
+// login user
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
-    async (credentials, { rejectWithValue }) => {
+    async ({ email, password, rememberMe }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/api/auth/login/`, credentials);
+            const response = await axios.post(`${API_URL}/api/auth/login/`, {
+                email,
+                password,
+            });
 
-            const { email, access_token, refresh_token, role } = response.data;
+            const { access_token, refresh_token, email: userEmail, role } = response.data;
 
-            // console.log('AccessToken:', access_token);
-            // console.log('RefreshToken:', refresh_token);
-            // console.log('User Email:', email);
+            // Calculate expiration time based on "Remember Me" selection
+            const expirationTime = new Date().getTime() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 2 * 24 * 60 * 60 * 1000); // 7 days or 2 days
 
-            // Store tokens and email (user) in localStorage
-            localStorage.setItem('accessToken', access_token);
-            localStorage.setItem('refreshToken', refresh_token);
-            localStorage.setItem('user', JSON.stringify({ email, role })); // Store the user email or any other info you want
+            const tokenData = {
+                access_token,
+                refresh_token,
+                expirationTime,
+            };
 
-            return { access_token, refresh_token, email, role };
+            // Store tokens in localStorage for either 7 days or 2 days
+            localStorage.setItem('authToken', JSON.stringify(tokenData));
+            localStorage.setItem('user', JSON.stringify({ email: userEmail, role })); // Store user data
+
+            return { access_token, refresh_token, email: userEmail, role };
         } catch (error) {
-            return rejectWithValue(handleApiError(error));
+            return rejectWithValue(error.response?.data || 'Login failed');
         }
     }
 );
-
 
 // Logout user
 export const logoutUser = createAsyncThunk(
@@ -95,25 +114,28 @@ export const logoutUser = createAsyncThunk(
             // Attempt to log the user out on the server
             const response = await axios.post(`${API_URL}/api/auth/logout/`);
 
-            // Clear tokens from local storage after successful server logout
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('user');
+            // Clear tokens and user data from both localStorage and sessionStorage
+            localStorage.removeItem('authToken'); // Remove token data from localStorage
+            localStorage.removeItem('user');      // Remove user data from localStorage
+            sessionStorage.removeItem('accessToken'); // Remove token data from sessionStorage
+            sessionStorage.removeItem('refreshToken'); // Remove refresh token from sessionStorage
 
             // Return success response or status
-            return response.data;  // or just return if no specific data is required
+            return response.data; // Optionally return response data if needed
 
         } catch (error) {
-            // Ensure tokens are removed from local storage even if the API call fails
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            // Ensure tokens and user data are removed even if the API call fails
+            localStorage.removeItem('authToken');
             localStorage.removeItem('user');
+            sessionStorage.removeItem('accessToken');
+            sessionStorage.removeItem('refreshToken');
 
-            // Return error handling to reject the thunk with appropriate error
-            return rejectWithValue(handleApiError(error));
+            // Handle API error and reject the thunk with appropriate error
+            return rejectWithValue(error.response?.data || 'Logout failed');
         }
     }
 );
+
 
 
 // Request password reset

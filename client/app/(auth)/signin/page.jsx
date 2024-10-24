@@ -15,6 +15,7 @@ const Signin = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false); // State for 'Remember Me' checkbox
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -33,7 +34,7 @@ const Signin = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(loginUser({ email, password })); // Dispatch login action
+        dispatch(loginUser({ email, password, rememberMe })); // Dispatch login action with rememberMe flag
     };
 
     const handleClose = () => {
@@ -86,6 +87,8 @@ const Signin = () => {
                             <input
                                 type="checkbox"
                                 className="form-checkbox h-4 w-4 text-blue-500 transition duration-300"
+                                checked={rememberMe}
+                                onChange={() => setRememberMe(!rememberMe)} // Toggle rememberMe state
                             />
                             <span className="ml-2 text-sm">Remember me</span>
                         </label>
