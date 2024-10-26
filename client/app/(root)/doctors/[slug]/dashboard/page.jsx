@@ -7,6 +7,7 @@ import {
     PatientManagement,
     AppointmentScheduling,
     FeedbackManagement,
+    ChangePassword
 } from '../../../../../components';
 
 const DoctorDashboard = () => {
@@ -78,6 +79,8 @@ const DoctorDashboard = () => {
                 return <AppointmentScheduling appointments={appointments} availableSlots={[]} selectedDate={""} setSelectedDate={() => { }} selectedTime={""} setSelectedTime={() => { }} />;
             case 'feedback':
                 return <FeedbackManagement />;
+            case 'changepass':
+                return <ChangePassword />;
             default:
                 return null;
         }

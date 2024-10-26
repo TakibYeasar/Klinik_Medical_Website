@@ -6,9 +6,9 @@ import {
     loginUser,
     logoutUser,
     passwordReset,
-    passwordResetConfirm,
     setNewPassword,
     refreshToken,
+    changePassword,
 } from './authApi';
 
 // Initial state for the auth slice
@@ -125,23 +125,17 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(passwordReset.fulfilled, (state) => {
-                state.loading = false; // No state change after password reset request
+            .addCase(passwordReset.fulfilled, (state, { meta }) => {
+                state.loading = false;
+
+                // Determine success message based on the action payload
+                if (meta.arg.email) {
+                    state.successMessage = 'Password reset link sent to your email.';
+                } else if (meta.arg.uidb64 && meta.arg.token && meta.arg.newPassword) {
+                    state.successMessage = 'Password reset successful.';
+                }
             })
             .addCase(passwordReset.rejected, (state, { payload }) => {
-                state.loading = false;
-                state.error = payload;
-            })
-
-            // Password reset confirmation
-            .addCase(passwordResetConfirm.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(passwordResetConfirm.fulfilled, (state) => {
-                state.loading = false; // No additional state change needed after confirmation
-            })
-            .addCase(passwordResetConfirm.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
             })
@@ -155,6 +149,19 @@ const authSlice = createSlice({
                 state.loading = false; // No additional state change needed after setting new password
             })
             .addCase(setNewPassword.rejected, (state, { payload }) => {
+                state.loading = false;
+                state.error = payload;
+            })
+
+            // Change password
+            .addCase(changePassword.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(changePassword.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(changePassword.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
             })

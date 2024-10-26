@@ -19,6 +19,7 @@ export { default as ChangePassword } from "./containers/ChangePassword";
 
 
 // components - containers - admin
+export { default as AdminLeftSidebar } from "./admin/AdminLeftSidebar";
 export { default as ManageUsers } from "./admin/ManageUsers";
 export { default as ManageDoctors } from "./admin/ManageDoctors";
 export { default as ManagePatients } from "./admin/ManagePatients";

@@ -45,6 +45,14 @@ const PetLeftSidebar = ({ selectedItem, onSelect }) => {
                         Payment History
                     </button>
                 </li>
+                <li>
+                    <button
+                        className={`${selectedItem === "changepass" ? "font-bold" : ""} text-lg`}
+                        onClick={() => onSelect("changepass")}
+                    >
+                        Change Password
+                    </button>
+                </li>
             </ul>
         </div>
     );

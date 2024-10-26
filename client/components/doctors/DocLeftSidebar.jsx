@@ -21,6 +21,11 @@ const DocLeftSidebar = ({ setActiveSection }) => {
                     Feedback Management
                 </button>
             </li>
+            <li>
+                <button onClick={() => setActiveSection('changepass')} className="w-full text-left p-2 rounded hover:bg-gray-700">
+                    Change Password
+                </button>
+            </li>
         </ul>
     );
 };

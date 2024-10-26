@@ -137,31 +137,27 @@ export const logoutUser = createAsyncThunk(
 );
 
 
-
 // Request password reset
 export const passwordReset = createAsyncThunk(
     'auth/passwordReset',
-    async (email, { rejectWithValue }) => {
+    async ({ email, uidb64, token }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/api/auth/password-reset/`, { email });
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(handleApiError(error));
-        }
-    }
-);
+            let response;
 
-// Confirm password reset
-export const passwordResetConfirm = createAsyncThunk(
-    'auth/passwordResetConfirm',
-    async ({ uidb64, token, newPassword }, { rejectWithValue }) => {
-        try {
-            const response = await axios.post(`${API_URL}/api/auth/password-reset-confirm/${uidb64}/${token}/`, {
-                new_password: newPassword,
-            });
+            // Check if it's a request for reset link or reset confirmation
+            if (email) {
+                // Request password reset link
+                response = await axios.post(`${API_URL}/api/auth/password-reset/`, { email });
+            } else if (uidb64 && authToken) {
+                // Confirm password reset
+                response = await axios.post(
+                    `${API_URL}/api/auth/password-reset-confirm/${uidb64}/${token}/`,
+                );
+            }
+
             return response.data;
         } catch (error) {
-            return rejectWithValue(handleApiError(error));
+            return rejectWithValue(error.response?.data || 'An error occurred');
         }
     }
 );
@@ -172,6 +168,19 @@ export const setNewPassword = createAsyncThunk(
     async (passwordData, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/api/auth/set-new-password/`, passwordData);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(handleApiError(error));
+        }
+    }
+);
+
+// Change password
+export const changePassword = createAsyncThunk(
+    'auth/changePassword',
+    async (passwordData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${API_URL}/api/auth/change-password/`, passwordData);
             return response.data;
         } catch (error) {
             return rejectWithValue(handleApiError(error));

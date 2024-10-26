@@ -2,14 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import {
+  AdminLeftSidebar,
   ManageUsers,
   ManageDoctors,
   ManagePatients,
   ManageAppointments,
   ManageMedicalRecords,
   FinanceManagement,
-  ReportingAnalytics,
   SystemSettings,
+  ReportingAnalytics,
+  ChangePassword,
 } from "../../components";
 
 // Fetch appointments from Django backend API
@@ -37,86 +39,50 @@ const AdminDashboard = () => {
     getAppointments();
   }, []);
 
-  const handleSectionChange = (section) => {
-    setActiveSection(section);
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case "users":
+        return <ManageUsers />;
+      case "doctors":
+        return <ManageDoctors />;
+      case "patients":
+        return <ManagePatients />;
+      case "appointments":
+        return <ManageAppointments />;
+      case "medicalRecords":
+        return <ManageMedicalRecords />;
+      case "finance":
+        return <FinanceManagement />;
+      case "settings":
+        return <SystemSettings />;
+      case "changepass":
+        return <ChangePassword />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex">
       {/* Sidebar */}
-      <aside className="w-1/4 bg-gray-800 text-white p-5">
+      <div className="w-1/4 bg-gray-800 text-white min-h-screen p-5">
         <h2 className="text-2xl font-bold mb-5">Admin Dashboard</h2>
-        <ul className="space-y-4">
-          {[
-            { label: "Manage Users", section: "users" },
-            { label: "Manage Doctors", section: "doctors" },
-            { label: "Medical Records", section: "medicalRecords" },
-            { label: "Finance Management", section: "finance" },
-            { label: "System Settings", section: "settings" },
-          ].map(({ label, section }) => (
-            <li key={section}>
-              <button
-                className={`w-full text-left p-2 rounded transition-colors duration-200 ease-in-out hover:bg-gray-700 ${activeSection === section ? "bg-gray-600" : ""
-                  }`}
-                onClick={() => handleSectionChange(section)}
-              >
-                {label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </aside>
+        <AdminLeftSidebar
+          activeSection={activeSection}
+          handleSectionChange={setActiveSection}
+        />
+      </div>
 
       {/* Main Content */}
-      <main className="w-3/4 bg-gray-100 p-5">
-        <header className="mb-6">
-          <h1 className="text-xl font-semibold">Admin Dashboard</h1>
+      <div className="w-3/4 p-5 bg-gray-100 min-h-screen">
+        <header className="flex justify-between items-center py-6">
+          <h1 className="text-xl font-semibold">Welcome to Admin Dashboard</h1>
         </header>
 
-        <section className="space-y-10">
-
-          {activeSection === "reporting" && (
-            <div>
-              <ReportingAnalytics />
-            </div>
-          )}
-
-          {activeSection === "users" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Manage Users</h2>
-              <ManageUsers />
-            </div>
-          )}
-
-          {activeSection === "doctors" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Manage Doctors</h2>
-              <ManageDoctors />
-            </div>
-          )}
-
-          {activeSection === "medicalRecords" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Manage Medical Records</h2>
-              <ManageMedicalRecords />
-            </div>
-          )}
-
-          {activeSection === "finance" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">Finance Management</h2>
-              <FinanceManagement />
-            </div>
-          )}
-
-          {activeSection === "settings" && (
-            <div>
-              <h2 className="text-2xl font-bold mb-3">System Settings</h2>
-              <SystemSettings />
-            </div>
-          )}
-        </section>
-      </main>
+        <main className="flex flex-col space-y-14">
+          {renderActiveSection()}
+        </main>
+      </div>
     </div>
   );
 };
