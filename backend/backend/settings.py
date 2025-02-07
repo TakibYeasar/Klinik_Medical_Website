@@ -47,9 +47,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
     "authapi",
+    "core",
+    "user",
+    "appointment",
+    "medicalrecords",
+    "billing",
 ]
 
-# AUTH_USER_MODEL = 'authapi.CustomUser'
+AUTH_USER_MODEL = 'authapi.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
